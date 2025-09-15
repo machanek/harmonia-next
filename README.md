@@ -1,4 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Harmonia Rząska — Next.js
+
+Nowoczesne osiedle pod Krakowem — migracja z legacy HTML/JS do Next.js z zachowaniem pełnej funkcjonalności.
+
+## Jak zbudować i uruchomić
+
+### Development
+```bash
+npm run dev
+```
+
+### Production Build
+```bash
+npm run build
+npm run start
+```
+
+## ISR (Incremental Static Regeneration)
+
+Aplikacja używa ISR z `revalidate: 60` sekund. Strona jest generowana statycznie i odświeżana co minutę.
+
+### Jak wymusić odświeżenie danych:
+
+1. **Automatyczne**: Po deployu na Netlify, pierwsze wejście na stronę odświeży cache
+2. **Webhook**: Dodaj webhook w Netlify → Site settings → Build & deploy → Build hooks
+   - URL: `https://twoja-domena.netlify.app/`
+   - Trigger: "Deploy succeeded"
+3. **Ręczne**: Odwiedź stronę po 60 sekundach od ostatniego odświeżenia
+
+## Wymagane pliki w public/
+
+Upewnij się, że w katalogu `public/` znajdują się:
+
+```
+public/
+├── admin/           # Netlify CMS
+├── css/            # Legacy stylesheets
+├── images/         # Obrazy (logo, ikony)
+├── assets/         # Dodatkowe zasoby
+├── data/units/     # JSON z danymi jednostek
+├── robots.txt      # SEO
+├── sitemap.xml     # SEO
+├── sw.js          # Service Worker
+└── _redirects     # Netlify redirects
+```
 
 ## Getting Started
 

@@ -1,0 +1,12 @@
+{
+  "id": "1-a-1",
+  "nr_budynku": "A",
+  "nr_lokalu": "1",
+  "pietro": 1,
+  "powierzchnia": 85.5,
+  "dodatki": "Balkon, komórka lokatorska",
+  "cena": 850000,
+  "cena_m2": 9942,
+  "status": "WOLNE",
+  "plan_url": "/assets/plans/1-a-1.pdf"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "2-a-2",
+  "nr_budynku": "A",
+  "nr_lokalu": "2",
+  "pietro": 2,
+  "powierzchnia": 95.2,
+  "dodatki": "Balkon, komórka lokatorska, garaż",
+  "cena": 920000,
+  "cena_m2": 9664,
+  "status": "REZERWACJA",
+  "plan_url": "/assets/plans/2-a-2.pdf"
+}

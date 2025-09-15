@@ -1,0 +1,11 @@
+{
+  "pietro": 1,
+  "powierzchnia": 80,
+  "dodatki": "balkon",
+  "cena_m2": 10000,
+  "status": "WOLNE",
+  "cena": 900000,
+  "nr_budynku": "C",
+  "id": "C-2",
+  "nr_lokalu": "2"
+}

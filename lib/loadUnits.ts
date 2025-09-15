@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // lib/loadUnits.ts
 import fs from "fs/promises";
 import path from "path";
