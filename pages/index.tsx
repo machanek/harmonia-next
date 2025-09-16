@@ -8,6 +8,7 @@ import { loadGallery, type GalleryItem } from "@/lib/loadGallery";
 import FiltersForm from "@/components/Filters";
 import UnitsTable from "@/components/UnitsTable";
 import UnitsCards from "@/components/UnitsCards";
+import AboutSection from "@/components/AboutSection";
 import ArchitectureSection from "@/components/ArchitectureSection";
 import GalleryGrid from "@/components/GalleryGrid";
 
@@ -65,13 +66,13 @@ export default function Home({ units, buildings, gallery }: Props) {
       <main id="top">
         <section className="hero" id="hero">
           <div className="hero-inner">
-            <div className="container">
+          <div className="container">
               <div className="hero-gallery">
                 <img src="/images/uploads/hero-1.jpg" alt="Harmonia Rząska - widok osiedla" loading="eager" />
                 <img src="/images/uploads/hero-2.jpg" alt="Harmonia Rząska - dom" loading="lazy" />
                 <img src="/images/uploads/hero-3.jpg" alt="Harmonia Rząska - okolica" loading="lazy" />
               </div>
-              <div className="hero-content">
+            <div className="hero-content">
                 <h1>Osiedla Harmonia Rząska</h1>
                 <p>Odkryj przestrzeń stworzoną dla Ciebie – nowoczesne domy w harmonii z otoczeniem.</p>
               </div>
@@ -79,13 +80,7 @@ export default function Home({ units, buildings, gallery }: Props) {
           </div>
         </section>
 
-        <section className="section-about" id="o-nas">
-          <div className="container">
-            <h2>O nas</h2>
-            <p>Harmonia Rząska to wyjątkowa inwestycja mieszkaniowa położona w malowniczej miejscowości Rząska, zaledwie kilka kilometrów od granic Krakowa. Łączymy nowoczesną architekturę z poszanowaniem naturalnego otoczenia.</p>
-            <p>Oferujemy różnorodne metraże – od kompaktowych po przestronne lokale z balkonami, tarasami lub ogródkami. Wysoki standard, funkcjonalne układy i świetna lokalizacja.</p>
-                </div>
-        </section>
+        <AboutSection />
 
         <ArchitectureSection />
 
@@ -94,8 +89,8 @@ export default function Home({ units, buildings, gallery }: Props) {
             <h2>Plan osiedla</h2>
             <div className="plan-image">
               <img src="/images/uploads/plan-osiedla.jpg" alt="Plan zagospodarowania osiedla Harmonia Rząska" />
-            </div>
-          </div>
+                </div>
+                </div>
         </section>
 
         <section className="section-metrics" id="metraze">
@@ -105,19 +100,19 @@ export default function Home({ units, buildings, gallery }: Props) {
               <div className="metric">
                 <div className="metric-code">M 80</div>
                 <div className="metric-value">80 m²</div>
-              </div>
+                </div>
               <div className="metric">
                 <div className="metric-code">M 107</div>
                 <div className="metric-value">107 m²</div>
-              </div>
+                </div>
               <div className="metric">
                 <div className="metric-code">M 122</div>
                 <div className="metric-value">122 m²</div>
-              </div>
+                </div>
               <div className="metric">
                 <div className="metric-code">M 95</div>
                 <div className="metric-value">95 m²</div>
-              </div>
+                </div>
               <div className="metric">
                 <div className="metric-code">M 110</div>
                 <div className="metric-value">110 m²</div>
@@ -192,44 +187,44 @@ export default function Home({ units, buildings, gallery }: Props) {
             <div className="contact-form-section">
               <h3>Skontaktuj się z nami</h3>
               <p>Masz pytania? Chcesz umówić się na spotkanie? Napisz do nas!</p>
-              <form
-                id="contactForm"
-                name="contact"
-                method="POST"
+            <form
+              id="contactForm"
+              name="contact"
+              method="POST"
                 onSubmit={handleContactSubmit}
-                className="contact-form"
-              >
-                <input type="hidden" name="form-name" value="contact" />
-                <p className="hidden">
+              className="contact-form"
+            >
+              <input type="hidden" name="form-name" value="contact" />
+              <p className="hidden">
                   <label>Nie wypełniaj tego pola: <input name="bot-field" /></label>
-                </p>
+              </p>
 
-                <div className="form-row">
+              <div className="form-row">
                   <div className="form-group">
-                    <label htmlFor="name">Imię i nazwisko</label>
-                    <input id="name" name="name" type="text" required placeholder="Jan Kowalski" />
-                  </div>
+                <label htmlFor="name">Imię i nazwisko</label>
+                <input id="name" name="name" type="text" required placeholder="Jan Kowalski" />
+              </div>
                   <div className="form-group">
-                    <label htmlFor="email">Email</label>
-                    <input id="email" name="email" type="email" required placeholder="jan@example.com" />
+                <label htmlFor="email">Email</label>
+                <input id="email" name="email" type="email" required placeholder="jan@example.com" />
                   </div>
+              </div>
+
+              <div className="form-row">
+                  <div className="form-group">
+                <label htmlFor="phone">Telefon</label>
+                <input id="phone" name="phone" type="tel" placeholder="+48 600 000 000" />
+              </div>
+                  <div className="form-group">
+                <label htmlFor="message">Wiadomość</label>
+                <textarea id="message" name="message" rows={5} required placeholder="Treść wiadomości..." />
+              </div>
                 </div>
 
-                <div className="form-row">
-                  <div className="form-group">
-                    <label htmlFor="phone">Telefon</label>
-                    <input id="phone" name="phone" type="tel" placeholder="+48 600 000 000" />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="message">Wiadomość</label>
-                    <textarea id="message" name="message" rows={5} required placeholder="Treść wiadomości..." />
-                  </div>
-                </div>
-
-                <div className="form-actions">
-                  <button type="submit" className="btn btn-primary">Wyślij</button>
-                </div>
-              </form>
+              <div className="form-actions">
+                <button type="submit" className="btn btn-primary">Wyślij</button>
+              </div>
+            </form>
             </div>
           </div>
         </section>
