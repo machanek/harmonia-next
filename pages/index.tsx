@@ -66,22 +66,76 @@ export default function Home({ units, buildings, gallery }: Props) {
           <a href="#top" className="logo" aria-label="Harmonia Rząska — strona główna">
             <img src="/images/logo.svg" alt="Harmonia Rząska" width={180} height={48} />
           </a>
-          <nav className="main-nav" aria-label="Główna nawigacja">
+
+          {/* NOWE: renderowany na serwerze przycisk hamburgera */}
+          <button
+            type="button"
+            className="nav-toggle"
+            aria-label="Menu"
+            aria-controls="main-nav"
+            aria-expanded="false"
+          >
+            ☰
+          </button>
+
+          <nav id="main-nav" className="main-nav" aria-label="Główna nawigacja">
             <ul>
-              <li><a href="#oferta">Oferta</a></li>
+              <li><a href="#o-nas">O nas</a></li>
+              <li><a href="#lokale">Lokale</a></li>
               <li><a href="#galeria">Galeria</a></li>
-              <li><a href="#lokalizacja">Lokalizacja</a></li>
               <li><a href="#kontakt">Kontakt</a></li>
-              <li><a href="/admin" target="_blank" rel="noopener noreferrer">Panel</a></li>
+              <li><a href="/assets/prospekt-harmonia-rzaska.pdf" target="_blank" rel="noopener">Prospekt</a></li>
+              <li><a href="tel:730090030">730 090 030</a></li>
             </ul>
           </nav>
         </div>
       </header>
 
       <main id="top">
-        <section className="section-offer" id="oferta">
+        <section className="hero" id="hero">
           <div className="container">
-            <h1>Oferta mieszkań i domów</h1>
+            <div className="hero-inner">
+              <div className="hero-gallery">
+                <img src="/images/uploads/hero-1.jpg" alt="Harmonia Rząska - widok osiedla" loading="eager" />
+                <img src="/images/uploads/hero-2.jpg" alt="Harmonia Rząska - dom" loading="lazy" />
+                <img src="/images/uploads/hero-3.jpg" alt="Harmonia Rząska - okolica" loading="lazy" />
+              </div>
+              <div className="hero-text">
+                <h1>Osiedla Harmonia Rząska</h1>
+                <p>Odkryj przestrzeń stworzoną dla Ciebie – nowoczesne domy w harmonii z otoczeniem.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="section-about" id="o-nas">
+          <div className="container">
+            <h2>O nas</h2>
+            <p>Harmonia Rząska to wyjątkowa inwestycja mieszkaniowa położona w malowniczej miejscowości Rząska, zaledwie kilka kilometrów od granic Krakowa. Łączymy nowoczesną architekturę z poszanowaniem naturalnego otoczenia.</p>
+            <p>Oferujemy różnorodne metraże – od kompaktowych po przestronne lokale z balkonami, tarasami lub ogródkami. Wysoki standard, funkcjonalne układy i świetna lokalizacja.</p>
+                </div>
+        </section>
+
+        <section className="section-plan" id="plan">
+          <div className="container">
+            <h2>Plan osiedla</h2>
+            <img src="/images/uploads/plan-osiedla.jpg" alt="Plan zagospodarowania osiedla Harmonia Rząska" />
+                </div>
+        </section>
+
+        <section className="section-metrics" id="metraze">
+          <div className="container metrics-grid">
+            <div className="metric"><div className="metric-code">M 80</div><div className="metric-value">80 m²</div></div>
+            <div className="metric"><div className="metric-code">M 107</div><div className="metric-value">107 m²</div></div>
+            <div className="metric"><div className="metric-code">M 122</div><div className="metric-value">122 m²</div></div>
+            <div className="metric"><div className="metric-code">M 95</div><div className="metric-value">95 m²</div></div>
+            <div className="metric"><div className="metric-code">M 110</div><div className="metric-value">110 m²</div></div>
+                </div>
+        </section>
+
+        <section className="section-offer" id="lokale">
+          <div className="container">
+            <h2>Dostępność lokali</h2>
 
             <FiltersForm
               value={filters}
@@ -90,17 +144,17 @@ export default function Home({ units, buildings, gallery }: Props) {
               onReset={() => setFilters({ status: "", building: "", areaMin: null, areaMax: null, sort: "" })}
             />
 
-            <div className="view-switch" style={{display:"flex", gap:"8px", margin:"12px 0"}}>
+            <div className="view-switch">
               <button className={`btn ${view==="table"?"btn-primary":""}`} onClick={()=>setView("table")}>Tabela</button>
               <button className={`btn ${view==="cards"?"btn-primary":""}`} onClick={()=>setView("cards")}>Karty</button>
-              <div style={{marginLeft:"auto"}}>Łącznie: <strong>{filtered.length}</strong></div>
+              <span className="results-count">Łącznie: <strong>{filtered.length}</strong></span>
             </div>
 
             {view === "table" ? <UnitsTable items={filtered} /> : <UnitsCards items={filtered} />}
 
-            <div className="legend" style={{marginTop:"12px"}}>
-              <span className="badge badge-free">WOLNE</span>{" "}
-              <span className="badge badge-reserved">ZAREZERWOWANE</span>{" "}
+            <div className="legend">
+              <span className="badge badge-free">WOLNE</span>
+              <span className="badge badge-reserved">ZAREZERWOWANE</span>
               <span className="badge badge-sold">SPRZEDANE</span>
             </div>
           </div>
@@ -108,7 +162,7 @@ export default function Home({ units, buildings, gallery }: Props) {
 
         <section className="section-gallery" id="galeria">
           <div className="container">
-            <h2>Galeria</h2>
+            <h2>Galeria wnętrz</h2>
             <GalleryGrid items={gallery} />
           </div>
         </section>
@@ -117,15 +171,11 @@ export default function Home({ units, buildings, gallery }: Props) {
           <div className="container">
             <h2>Lokalizacja</h2>
             <p>Rząska, gm. Zabierzów — szybki dojazd do Krakowa, spokojna okolica.</p>
-            <div className="map-container" role="application" aria-label="Mapa lokalizacji">
+            <div className="map-container">
               <iframe
                 title="Mapa — Harmonia Rząska"
                 src="https://www.google.com/maps?q=Rząska&output=embed"
-                width="100%"
-                height="420"
-                style={{border:0}}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
+                width="100%" height="420" style={{border:0}} loading="lazy"
               />
             </div>
           </div>
@@ -133,7 +183,7 @@ export default function Home({ units, buildings, gallery }: Props) {
 
         <section className="section-contact" id="kontakt">
           <div className="container">
-            <h2>Kontakt</h2>
+            <h2>Skontaktuj się z nami</h2>
             <form
               id="contactForm"
               name="contact"
@@ -176,7 +226,25 @@ export default function Home({ units, buildings, gallery }: Props) {
 
       <footer className="site-footer">
         <div className="container footer-inner">
-          <p>&copy; {new Date().getFullYear()} Harmonia Rząska</p>
+          <div className="footer-col">
+            <h4>Harmonia Rząska</h4>
+            <p>Nowoczesne osiedle domów i mieszkań pod Krakowem. Idealne miejsce dla rodzin.</p>
+          </div>
+          <div className="footer-col">
+            <h4>Kontakt</h4>
+            <p><a href="tel:730090030">730 090 030</a><br/> <a href="mailto:biuro@harmoniarzaska.pl">biuro@harmoniarzaska.pl</a><br/> Rząska k. Krakowa</p>
+          </div>
+          <div className="footer-col">
+            <h4>Informacje</h4>
+            <p>
+              <a href="/robots.txt" target="_blank" rel="noopener">Polityka prywatności / RODO</a><br/>
+              <a href="#kontakt">Kontakt</a><br/>
+              <a href="/assets/prospekt-harmonia-rzaska.pdf" target="_blank" rel="noopener">Katalog PDF</a>
+            </p>
+          </div>
+        </div>
+        <div className="container footer-bottom">
+          <p>© {new Date().getFullYear()} Harmonia Rząska. Wszystkie prawa zastrzeżone.</p>
         </div>
       </footer>
     </>

@@ -2015,6 +2015,15 @@ p {
     }
 }
 
+/* Mobile nav helpers (tylko jeśli nie ma w legacy) */
+.nav-toggle { display: none; }
+@media (max-width: 980px) {
+  .nav-toggle { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 1px solid #ccc; background: #fff; margin-left: auto; }
+  .main-nav { display: none; }
+  .main-nav.is-open { display: block; }
+  .main-nav ul { display: grid; gap: 8px; padding: 12px 0; }
+}
+
 
 
 
