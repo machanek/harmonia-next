@@ -108,25 +108,26 @@
 
 /* PRZYCISKI W MENU */
 .btn-prospekt{
-  background: var(--primary-green);
-  color: var(--white) !important;
-  padding: 0.75rem 1.5rem;
+  background: #1F3D32;
+  color: #FFFFFF;
+  padding: 12px 24px !important;
   border-radius: 8px;
   font-weight: 500;
-  font-size: 0.9rem;
+  font-size: 14px;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 8px;
   text-decoration: none;
   border: none;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
+  min-height: 40px;
 }
 .btn-prospekt:hover{
-  background: var(--primary-green-dark);
+  background: #15342a;
   transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 .btn-prospekt:hover::after{
   display: none;
