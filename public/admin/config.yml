@@ -1,14 +1,11 @@
 backend:
-  name: test-repo
+  name: git-gateway
   branch: next-functional
 
 local_backend: true
 
-# Git Gateway configuration (uncomment when Identity is enabled)
-# backend:
-#   name: git-gateway
-#   branch: next-functional
-# publish_mode: editorial_workflow
+# Git Gateway configuration
+publish_mode: editorial_workflow
 
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
