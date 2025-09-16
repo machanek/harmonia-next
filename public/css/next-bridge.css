@@ -33,7 +33,7 @@
 .header-inner{
   display: flex;
   align-items: center;
-  gap: 24px;
+  justify-content: space-between;
   height: var(--header-height);
 }
 
@@ -62,7 +62,12 @@
 }
 
 /* Desktop nav */
-.main-nav{ margin-left: auto; }
+.main-nav{ 
+  display: flex; 
+  align-items: center; 
+  gap: 2rem; 
+  height: 100%; 
+}
 .main-nav ul{
   list-style: none;
   display: flex;
@@ -105,22 +110,39 @@
 .btn-prospekt{
   background: var(--primary-green);
   color: var(--white) !important;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-weight: 500;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
   transition: var(--transition);
+  white-space: nowrap;
 }
 .btn-prospekt:hover{
   background: var(--primary-green-dark);
   transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 .btn-prospekt:hover::after{
   display: none;
+}
+.btn-prospekt svg {
+  width: 16px;
+  height: 16px;
 }
 
 .btn-phone{
   color: var(--primary-green) !important;
   font-weight: 600;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   transition: var(--transition);
 }
 .btn-phone:hover{
@@ -128,6 +150,10 @@
 }
 .btn-phone:hover::after{
   display: none;
+}
+.btn-phone svg {
+  width: 16px;
+  height: 16px;
 }
 
 /* Mobile toggle */
