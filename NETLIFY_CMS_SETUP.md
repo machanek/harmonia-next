@@ -6,17 +6,29 @@ Ten błąd występuje, gdy Netlify CMS nie może uzyskać dostępu do ustawień 
 
 ## 1. Włącz Identity Service w Netlify
 
-1. Przejdź do **Site settings** → **Identity**
-2. Kliknij **Enable Identity**
-3. W sekcji **Registration preferences** wybierz:
+**WAŻNE:** To jest kluczowy krok! Bez tego CMS nie będzie działać.
+
+1. Przejdź do **Netlify Dashboard** → **Your Site** → **Site settings**
+2. W lewym menu kliknij **Identity**
+3. Kliknij **Enable Identity** (duży niebieski przycisk)
+4. W sekcji **Registration preferences** wybierz:
    - **Open** (dla testów) lub **Invite only** (dla produkcji)
-4. W sekcji **External providers** możesz dodać GitHub (opcjonalnie)
+5. W sekcji **External providers** możesz dodać GitHub (opcjonalnie)
+6. **Zapisz zmiany**
+
+**Sprawdź czy Identity jest włączony:** Powinieneś zobaczyć zielony status "Identity is enabled"
 
 ## 2. Włącz Git Gateway
 
+**WAŻNE:** To jest drugi kluczowy krok!
+
 1. Przejdź do **Site settings** → **Identity** → **Services**
-2. Kliknij **Enable Git Gateway**
-3. Potwierdź włączenie
+2. Znajdź sekcję **Git Gateway**
+3. Kliknij **Enable Git Gateway**
+4. Potwierdź włączenie
+5. **Zapisz zmiany**
+
+**Sprawdź czy Git Gateway jest włączony:** Powinieneś zobaczyć zielony status "Git Gateway is enabled"
 
 ## 3. Sprawdź Branch Settings
 
@@ -30,7 +42,27 @@ Ten błąd występuje, gdy Netlify CMS nie może uzyskać dostępu do ustawień 
 2. Upewnij się, że Netlify ma dostęp do repozytorium
 3. Jeśli nie, połącz ponownie z GitHub
 
-## 5. Test CMS
+## 5. Zmień konfigurację CMS na git-gateway
+
+**PO WŁĄCZENIU Identity i Git Gateway:**
+
+1. W pliku `public/admin/config.yml` zmień:
+```yaml
+# Zamiast:
+backend:
+  name: test-repo
+  branch: next-functional
+
+# Użyj:
+backend:
+  name: git-gateway
+  branch: next-functional
+publish_mode: editorial_workflow
+```
+
+2. Usuń lub zakomentuj `local_backend: true`
+
+## 6. Test CMS
 
 Po wykonaniu powyższych kroków:
 
@@ -39,7 +71,7 @@ Po wykonaniu powyższych kroków:
 3. Zarejestruj się lub zaloguj
 4. Powinieneś zobaczyć panel CMS
 
-## 6. Alternatywne rozwiązanie (jeśli nadal nie działa)
+## 7. Alternatywne rozwiązanie (jeśli nadal nie działa)
 
 Jeśli problem nadal występuje, możesz tymczasowo użyć `local_backend`:
 
@@ -56,7 +88,7 @@ local_backend: true
 2. Uruchom lokalnie: `npx netlify-cms-proxy-server`
 3. Przejdź do `http://localhost:8080/admin`
 
-## 7. Sprawdź logi
+## 8. Sprawdź logi
 
 Jeśli nadal masz problemy:
 
