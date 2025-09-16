@@ -8,6 +8,7 @@ import { loadGallery, type GalleryItem } from "@/lib/loadGallery";
 import FiltersForm from "@/components/Filters";
 import UnitsTable from "@/components/UnitsTable";
 import UnitsCards from "@/components/UnitsCards";
+import ArchitectureSection from "@/components/ArchitectureSection";
 import GalleryGrid from "@/components/GalleryGrid";
 
 type Props = {
@@ -85,6 +86,8 @@ export default function Home({ units, buildings, gallery }: Props) {
             <p>Oferujemy różnorodne metraże – od kompaktowych po przestronne lokale z balkonami, tarasami lub ogródkami. Wysoki standard, funkcjonalne układy i świetna lokalizacja.</p>
                 </div>
         </section>
+
+        <ArchitectureSection />
 
         <section className="section-plan" id="plan">
           <div className="container">
