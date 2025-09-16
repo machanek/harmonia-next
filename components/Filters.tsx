@@ -11,12 +11,13 @@ type Props = {
 
 export default function Filters({ value, buildings, onChange, onReset }: Props) {
   return (
-    <form id="filters" className="filters" aria-label="Filtry oferty" onSubmit={(e)=>e.preventDefault()}>
-      <div className="filters-row">
-        <div className="filter">
-          <label htmlFor="filter-status">Status</label>
+    <form id="filters" className="filters-form" aria-label="Filtry oferty" onSubmit={(e)=>e.preventDefault()}>
+      <div className="filters-grid">
+        <div className="filter-group">
+          <label htmlFor="filter-status" className="filter-label">Status</label>
           <select
             id="filter-status"
+            className="filter-select"
             value={value.status ?? ""}
             onChange={(e) => onChange({ ...value, status: e.target.value as typeof value.status })}
           >
@@ -27,10 +28,11 @@ export default function Filters({ value, buildings, onChange, onReset }: Props) 
           </select>
         </div>
 
-        <div className="filter">
-          <label htmlFor="filter-budynek">Budynek</label>
+        <div className="filter-group">
+          <label htmlFor="filter-budynek" className="filter-label">Budynek</label>
           <select
             id="filter-budynek"
+            className="filter-select"
             value={value.building ?? ""}
             onChange={(e) => onChange({ ...value, building: e.target.value })}
           >
@@ -41,32 +43,35 @@ export default function Filters({ value, buildings, onChange, onReset }: Props) 
           </select>
         </div>
 
-        <div className="filter">
-          <label htmlFor="filter-min">Pow. min (m²)</label>
+        <div className="filter-group">
+          <label htmlFor="filter-min" className="filter-label">Pow. min (m²)</label>
           <input
             id="filter-min"
             type="number"
             min={0}
+            className="filter-input"
             value={value.areaMin ?? ""}
             onChange={(e) => onChange({ ...value, areaMin: e.target.value ? Number(e.target.value) : null })}
           />
         </div>
 
-        <div className="filter">
-          <label htmlFor="filter-max">Pow. max (m²)</label>
+        <div className="filter-group">
+          <label htmlFor="filter-max" className="filter-label">Pow. max (m²)</label>
           <input
             id="filter-max"
             type="number"
             min={0}
+            className="filter-input"
             value={value.areaMax ?? ""}
             onChange={(e) => onChange({ ...value, areaMax: e.target.value ? Number(e.target.value) : null })}
           />
         </div>
 
-        <div className="filter">
-          <label htmlFor="filter-sort">Sortowanie</label>
+        <div className="filter-group">
+          <label htmlFor="filter-sort" className="filter-label">Sortowanie</label>
           <select
             id="filter-sort"
+            className="filter-select"
             value={value.sort ?? ""}
             onChange={(e) => onChange({ ...value, sort: e.target.value as typeof value.sort })}
           >
@@ -78,7 +83,7 @@ export default function Filters({ value, buildings, onChange, onReset }: Props) 
           </select>
         </div>
 
-        <div className="filter actions">
+        <div className="filter-actions">
           <button type="button" id="filter-apply" className="btn btn-primary" onClick={() => onChange({ ...value })}>
             Filtruj
           </button>

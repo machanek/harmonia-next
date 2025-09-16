@@ -7,7 +7,7 @@ type Props = { items: Unit[] };
 
 export default function UnitsTable({ items }: Props) {
   return (
-    <div className="units-table-wrap">
+    <div className="units-table-container">
       <table id="unitsTable" className="units-table" aria-label="Tabela jednostek">
         <thead>
           <tr>
@@ -25,7 +25,7 @@ export default function UnitsTable({ items }: Props) {
         </thead>
         <tbody>
           {items.map((u) => (
-            <tr key={u.id}>
+            <tr key={u.id} className={u.status?.toLowerCase().startsWith("sprzed") ? "sold" : ""}>
               <td>{u.id}</td>
               <td>{u.building ?? "—"}</td>
               <td>{u.unit ?? "—"}</td>
