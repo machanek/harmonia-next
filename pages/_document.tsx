@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-css-tags */
 import { Html, Head, Main, NextScript } from "next/document";
 
 export default function Document() {
@@ -6,7 +5,6 @@ export default function Document() {
     <Html lang="pl">
       <Head>
         <link rel="stylesheet" href="/css/styles.css" />
-        <link rel="stylesheet" href="/css/next-bridge.css" />
       </Head>
       <body>
         <Main />
