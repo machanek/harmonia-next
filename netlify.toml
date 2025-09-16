@@ -5,3 +5,18 @@
 [build.environment]
   NODE_VERSION = "20.18.0"
   NEXT_TELEMETRY_DISABLED = "1"
+
+# Netlify CMS Headers
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Identity redirects
+[[redirects]]
+  from = "/admin"
+  to = "/admin/"
+  status = 301
