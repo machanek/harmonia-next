@@ -1,8 +1,4 @@
-import React from 'react';
 import { styled } from '@/lib/stitches.config';
-import { Button } from '@/components/ui/Button';
-import type { Unit } from '@/lib/loadUnits';
-import type { Filters } from '@/lib/filterSort';
 
 // Section Container
 export const UnitsSection = styled('section', {

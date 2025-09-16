@@ -4,7 +4,7 @@ import type { Unit } from "@/lib/loadUnits";
 import { formatM2, formatPLN } from "@/lib/format";
 import {
   TableContainer,
-  UnitsTable,
+  UnitsTable as StyledUnitsTable,
   TableHeader,
   TableHeaderCell,
   TableBody,
@@ -19,7 +19,7 @@ type Props = { items: Unit[] };
 export default function UnitsTable({ items }: Props) {
   return (
     <TableContainer>
-      <UnitsTable id="unitsTable" aria-label="Tabela jednostek">
+      <StyledUnitsTable id="unitsTable" aria-label="Tabela jednostek">
         <TableHeader>
           <tr>
             <TableHeaderCell>ID</TableHeaderCell>
@@ -50,7 +50,7 @@ export default function UnitsTable({ items }: Props) {
             </TableRow>
           ))}
         </TableBody>
-      </UnitsTable>
+      </StyledUnitsTable>
     </TableContainer>
   );
 }

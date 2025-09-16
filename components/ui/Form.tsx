@@ -1,4 +1,3 @@
-import React from 'react';
 import { styled } from '@/lib/stitches.config';
 
 // Form Container
