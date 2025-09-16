@@ -109,7 +109,7 @@
 /* PRZYCISKI W MENU */
 .btn-prospekt{
   background: #1F3D32;
-  color: #FFFFFF;
+  color: #FFFFFF !important;
   padding: 12px 32px !important;
   border-radius: 8px;
   font-weight: 500;
