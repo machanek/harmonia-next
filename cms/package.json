@@ -1,0 +1,23 @@
+{
+  "name": "harmonia-cms",
+  "version": "1.0.0",
+  "description": "PayloadCMS for Harmonia Rząska",
+  "main": "index.js",
+  "scripts": {
+    "dev": "payload dev",
+    "build": "payload build",
+    "generate:types": "payload generate:types"
+  },
+  "dependencies": {
+    "payload": "latest",
+    "@payloadcms/bundler-webpack": "latest",
+    "@payloadcms/db-postgres": "latest",
+    "@payloadcms/richtext-lexical": "latest",
+    "sharp": "^0.33.0",
+    "graphql": "^16.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
