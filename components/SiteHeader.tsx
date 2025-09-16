@@ -14,7 +14,7 @@ export default function SiteHeader() {
         </a>
 
         {/* DESKTOP NAV */}
-        <nav className="nav hidden md:flex items-center gap-8">
+        <nav className="nav desktop-nav">
           <a href="#o-nas">O nas</a>
           <a href="#lokale">Lokale</a>
           <a href="#galeria">Galeria</a>
@@ -30,7 +30,7 @@ export default function SiteHeader() {
         </nav>
 
         {/* MOBILE NAV */}
-        <nav className="nav md:hidden flex items-center gap-4">
+        <nav className="nav mobile-nav">
           <a href="/assets/prospekt-harmonia-rzaska.pdf" target="_blank" rel="noopener" className="btn-prospekt">
             <Download size={16} />
             Prospekt
@@ -53,9 +53,9 @@ export default function SiteHeader() {
 
       {/* MOBILE DROPDOWN */}
       {isMenuOpen && (
-        <div className="mobile-menu md:hidden absolute top-full left-0 w-full bg-white border-t border-gray-200 shadow-lg">
-          <div className="container py-4">
-            <nav className="flex flex-col gap-4">
+        <div className="mobile-menu">
+          <div className="container">
+            <nav>
               <a href="#o-nas" onClick={() => setIsMenuOpen(false)}>O nas</a>
               <a href="#lokale" onClick={() => setIsMenuOpen(false)}>Lokale</a>
               <a href="#galeria" onClick={() => setIsMenuOpen(false)}>Galeria</a>

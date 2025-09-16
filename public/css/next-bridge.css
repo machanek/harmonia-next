@@ -61,6 +61,16 @@
 }
 
 /* Desktop nav */
+.desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.mobile-nav {
+  display: none;
+}
+
 .nav a {
   color: #2C2C2C;
   text-decoration: none;
@@ -173,6 +183,16 @@
 
 /* Mobile responsive styles */
 @media (max-width: 768px) {
+  .desktop-nav {
+    display: none;
+  }
+  
+  .mobile-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
   .btn-prospekt {
     padding: 8px 12px !important;
     font-size: 12px !important;
