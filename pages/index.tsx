@@ -186,7 +186,7 @@ export default function Home({ units, buildings, gallery }: Props) {
           <div className="container">
             <div className="contact-form-section">
               <h3>Skontaktuj się z nami</h3>
-              <p>Masz pytania? Chcesz umówić się na spotkanie? Napisz do nas!</p>
+              <p>Masz pytania o dostępne lokale? Chcesz umówić się na prezentację? Napisz do nas!</p>
             <form
               id="contactForm"
               name="contact"
@@ -200,29 +200,65 @@ export default function Home({ units, buildings, gallery }: Props) {
               </p>
 
               <div className="form-row">
-                  <div className="form-group">
-                <label htmlFor="name">Imię i nazwisko</label>
-                <input id="name" name="name" type="text" required placeholder="Jan Kowalski" />
-              </div>
-                  <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <input id="email" name="email" type="email" required placeholder="jan@example.com" />
-                  </div>
+                <div className="form-group">
+                  <label htmlFor="name">Imię i nazwisko *</label>
+                  <input id="name" name="name" type="text" required placeholder="Jan Kowalski" />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="phone">Telefon *</label>
+                  <input id="phone" name="phone" type="tel" required placeholder="+48 600 000 000" />
+                </div>
               </div>
 
               <div className="form-row">
-                  <div className="form-group">
-                <label htmlFor="phone">Telefon</label>
-                <input id="phone" name="phone" type="tel" placeholder="+48 600 000 000" />
-              </div>
-                  <div className="form-group">
-                <label htmlFor="message">Wiadomość</label>
-                <textarea id="message" name="message" rows={5} required placeholder="Treść wiadomości..." />
-              </div>
+                <div className="form-group">
+                  <label htmlFor="email">E-mail *</label>
+                  <input id="email" name="email" type="email" required placeholder="jan@example.com" />
                 </div>
+                <div className="form-group">
+                  <label htmlFor="subject">Temat</label>
+                  <select id="subject" name="subject">
+                    <option value="">Wybierz temat</option>
+                    <option value="Pytanie o mieszkanie">Pytanie o mieszkanie</option>
+                    <option value="Umówienie prezentacji">Umówienie prezentacji</option>
+                    <option value="Finansowanie">Finansowanie</option>
+                    <option value="Dokumenty i procedury">Dokumenty i procedury</option>
+                    <option value="Inne">Inne</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group full-width">
+                  <label htmlFor="message">Wiadomość *</label>
+                  <textarea id="message" name="message" rows={5} required placeholder="Treść wiadomości..." />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group full-width">
+                  <div className="checkbox-group">
+                    <input type="checkbox" id="privacy" name="privacy" required />
+                    <label htmlFor="privacy">
+                      Wyrażam zgodę na przetwarzanie moich danych osobowych zgodnie z Polityką prywatności w celu odpowiedzi na zapytanie. *
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group full-width">
+                  <div className="checkbox-group">
+                    <input type="checkbox" id="marketing" name="marketing" />
+                    <label htmlFor="marketing">
+                      Wyrażam zgodę na otrzymywanie informacji marketingowych o ofercie Harmonia Rząska.
+                    </label>
+                  </div>
+                </div>
+              </div>
 
               <div className="form-actions">
-                <button type="submit" className="btn btn-primary">Wyślij</button>
+                <button type="submit" className="btn btn-primary">WYŚLIJ WIADOMOŚĆ</button>
               </div>
             </form>
             </div>

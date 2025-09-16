@@ -6,6 +6,7 @@ export default function Document() {
     <Html lang="pl">
       <Head>
         <link rel="stylesheet" href="/css/styles.css" />
+        <link rel="stylesheet" href="/css/form-styles.css" />
       </Head>
       <body>
         <Main />
