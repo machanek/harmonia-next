@@ -285,3 +285,119 @@ export const PlanLink = styled('a', {
     transform: 'translateY(-1px)',
   },
 });
+
+// Cards Layout
+export const CardsContainer = styled('div', {
+  display: 'grid',
+  gap: '$4',
+  gridTemplateColumns: '1fr',
+  
+  '@sm': {
+    gridTemplateColumns: 'repeat(2, 1fr)',
+  },
+  
+  '@md': {
+    gridTemplateColumns: 'repeat(3, 1fr)',
+  },
+  
+  '@lg': {
+    gridTemplateColumns: 'repeat(4, 1fr)',
+  },
+  
+  '@xl': {
+    gridTemplateColumns: 'repeat(5, 1fr)',
+  },
+});
+
+// Unit Card
+export const UnitCard = styled('article', {
+  backgroundColor: '$background',
+  borderRadius: '$3',
+  padding: '$4',
+  boxShadow: '$2',
+  border: '1px solid $border',
+  transition: 'all 0.3s ease',
+  
+  '&:hover': {
+    boxShadow: '$3',
+    transform: 'translateY(-2px)',
+  },
+  
+  variants: {
+    sold: {
+      true: {
+        opacity: 0.6,
+        backgroundColor: '$backgroundLight',
+      },
+    },
+  },
+});
+
+// Card Header
+export const CardHeader = styled('header', {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginBottom: '$3',
+  paddingBottom: '$2',
+  borderBottom: '1px solid $borderLight',
+});
+
+export const CardId = styled('div', {
+  fontSize: '$4',
+  fontWeight: '$4',
+  color: '$textDark',
+});
+
+// Card Info
+export const CardInfo = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '$2',
+  marginBottom: '$3',
+});
+
+export const CardField = styled('div', {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  fontSize: '$2',
+});
+
+export const FieldLabel = styled('span', {
+  color: '$textLight',
+  fontWeight: '$2',
+});
+
+export const FieldValue = styled('span', {
+  color: '$textDark',
+  fontWeight: '$3',
+  textAlign: 'right',
+  flex: 1,
+  marginLeft: '$2',
+});
+
+// Card Details
+export const CardDetails = styled('div', {
+  marginBottom: '$3',
+  padding: '$2',
+  backgroundColor: '$backgroundLight',
+  borderRadius: '$2',
+  fontSize: '$2',
+  color: '$textDark',
+});
+
+// Card Actions
+export const CardActions = styled('div', {
+  display: 'flex',
+  justifyContent: 'center',
+  paddingTop: '$2',
+  borderTop: '1px solid $borderLight',
+});
+
+// Muted Text
+export const MutedText = styled('span', {
+  color: '$textLight',
+  fontSize: '$2',
+  fontStyle: 'italic',
+});
