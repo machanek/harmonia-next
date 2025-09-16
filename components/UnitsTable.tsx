@@ -2,58 +2,69 @@
 import React from "react";
 import type { Unit } from "@/lib/loadUnits";
 import { formatM2, formatPLN } from "@/lib/format";
+import {
+  TableContainer,
+  UnitsTable,
+  TableHeader,
+  TableHeaderCell,
+  TableBody,
+  TableRow,
+  TableCell,
+  StatusBadge,
+  PlanLink,
+} from "@/components/ui/UnitsSection";
 
 type Props = { items: Unit[] };
 
 export default function UnitsTable({ items }: Props) {
   return (
-    <div className="units-table-container">
-      <table id="unitsTable" className="units-table" aria-label="Tabela jednostek">
-        <thead>
+    <TableContainer>
+      <UnitsTable id="unitsTable" aria-label="Tabela jednostek">
+        <TableHeader>
           <tr>
-            <th>ID</th>
-            <th>Budynek</th>
-            <th>Lokal</th>
-            <th>Piętro</th>
-            <th>Pow. (m²)</th>
-            <th>Dodatki</th>
-            <th>Cena (PLN)</th>
-            <th>Cena/m²</th>
-            <th>Status</th>
-            <th>Plan</th>
+            <TableHeaderCell>ID</TableHeaderCell>
+            <TableHeaderCell>Budynek</TableHeaderCell>
+            <TableHeaderCell>Lokal</TableHeaderCell>
+            <TableHeaderCell>Piętro</TableHeaderCell>
+            <TableHeaderCell>Pow. (m²)</TableHeaderCell>
+            <TableHeaderCell>Dodatki</TableHeaderCell>
+            <TableHeaderCell>Cena (PLN)</TableHeaderCell>
+            <TableHeaderCell>Cena/m²</TableHeaderCell>
+            <TableHeaderCell>Status</TableHeaderCell>
+            <TableHeaderCell>Plan</TableHeaderCell>
           </tr>
-        </thead>
-        <tbody>
+        </TableHeader>
+        <TableBody>
           {items.map((u) => (
-            <tr key={u.id} className={u.status?.toLowerCase().startsWith("sprzed") ? "sold" : ""}>
-              <td>{u.id}</td>
-              <td>{u.building ?? "—"}</td>
-              <td>{u.unit ?? "—"}</td>
-              <td>{u.floor ?? "—"}</td>
-              <td>{formatM2(u.area)}</td>
-              <td>{u.extras?.join(", ") ?? "—"}</td>
-              <td>{formatPLN(u.price)}</td>
-              <td>{u.pricePerM2 ? formatPLN(u.pricePerM2) : (u.price && u.area ? formatPLN(Math.round(u.price/u.area)) : "—")}</td>
-              <td><StatusBadge status={u.status} /></td>
-              <td>{u.planUrl ? <a href={u.planUrl} target="_blank" rel="noopener noreferrer" className="btn btn-sm">Zobacz</a> : "—"}</td>
-            </tr>
+            <TableRow key={u.id} sold={u.status?.toLowerCase().startsWith("sprzed") || false}>
+              <TableCell>{u.id}</TableCell>
+              <TableCell>{u.building ?? "—"}</TableCell>
+              <TableCell>{u.unit ?? "—"}</TableCell>
+              <TableCell>{u.floor ?? "—"}</TableCell>
+              <TableCell>{formatM2(u.area)}</TableCell>
+              <TableCell>{u.extras?.join(", ") ?? "—"}</TableCell>
+              <TableCell>{formatPLN(u.price)}</TableCell>
+              <TableCell>{u.pricePerM2 ? formatPLN(u.pricePerM2) : (u.price && u.area ? formatPLN(Math.round(u.price/u.area)) : "—")}</TableCell>
+              <TableCell><StatusBadgeComponent status={u.status} /></TableCell>
+              <TableCell>{u.planUrl ? <PlanLink href={u.planUrl} target="_blank" rel="noopener noreferrer">Zobacz</PlanLink> : "—"}</TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
-    </div>
+        </TableBody>
+      </UnitsTable>
+    </TableContainer>
   );
 }
 
-function StatusBadge({ status }: { status?: string | null }) {
+function StatusBadgeComponent({ status }: { status?: string | null }) {
   const s = (status ?? "").toLowerCase();
-  const cls =
-    s === "wolny" ? "badge badge-free" :
-    s.startsWith("zarezer") ? "badge badge-reserved" :
-    s.startsWith("sprzed") ? "badge badge-sold" :
-    "badge";
+  const statusType =
+    s === "wolny" ? "free" :
+    s.startsWith("zarezer") ? "reserved" :
+    s.startsWith("sprzed") ? "sold" :
+    "free";
   const label =
     s === "wolny" ? "WOLNE" :
     s.startsWith("zarezer") ? "ZAREZERWOWANE" :
     s.startsWith("sprzed") ? "SPRZEDANE" : (status ?? "—");
-  return <span className={cls}>{label}</span>;
+  return <StatusBadge status={statusType}>{label}</StatusBadge>;
 }

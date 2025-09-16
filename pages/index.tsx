@@ -12,6 +12,7 @@ import AboutSection from "@/components/AboutSection";
 import ArchitectureSection from "@/components/ArchitectureSection";
 import GalleryGrid from "@/components/GalleryGrid";
 import ContactForm from "@/components/ContactForm";
+import UnitsSectionComponent from "@/components/UnitsSectionComponent";
 
 type Props = {
   units: Unit[];
@@ -122,45 +123,14 @@ export default function Home({ units, buildings, gallery }: Props) {
           </div>
         </section>
 
-        <section className="section-offer" id="lokale">
-          <div className="container">
-            <h2>Dostępność lokali</h2>
-
-            <FiltersForm
-              value={filters}
-              buildings={buildings}
-              onChange={setFilters}
-              onReset={() => setFilters({ status: "", building: "", areaMin: null, areaMax: null, sort: "" })}
-            />
-
-            <div className="view-controls">
-              <div className="view-switch">
-                <button className={`btn ${view==="table"?"btn-primary":""}`} onClick={()=>setView("table")}>Tabela</button>
-                <button className={`btn ${view==="cards"?"btn-primary":""}`} onClick={()=>setView("cards")}>Karty</button>
-              </div>
-              <div className="results-info">
-                <span className="results-count">Łącznie: <strong>{filtered.length}</strong></span>
-              </div>
-            </div>
-
-            {view === "table" ? <UnitsTable items={filtered} /> : <UnitsCards items={filtered} />}
-
-            <div className="status-legend">
-              <div className="legend-item">
-                <span className="badge badge-free"></span>
-                <span className="legend-label">WOLNE</span>
-              </div>
-              <div className="legend-item">
-                <span className="badge badge-reserved"></span>
-                <span className="legend-label">ZAREZERWOWANE</span>
-              </div>
-              <div className="legend-item">
-                <span className="badge badge-sold"></span>
-                <span className="legend-label">SPRZEDANE</span>
-              </div>
-            </div>
-          </div>
-        </section>
+        <UnitsSectionComponent
+          filters={filters}
+          buildings={buildings}
+          filtered={filtered}
+          view={view}
+          setFilters={setFilters}
+          setView={setView}
+        />
 
         <section className="gallery" id="galeria">
           <div className="container">
