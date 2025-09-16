@@ -3,5 +3,5 @@
   publish = ".next"
 
 [build.environment]
-  NODE_VERSION = "20.17.0"
+  NODE_VERSION = "20.18.0"
   NEXT_TELEMETRY_DISABLED = "1"

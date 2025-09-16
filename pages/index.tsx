@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Head from "next/head";
 import { useMemo, useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { loadUnitsAll, listBuildings, type Unit } from "@/lib/loadUnits";
 import { applyFilters, type Filters } from "@/lib/filterSort";
 import { loadGallery, type GalleryItem } from "@/lib/loadGallery";
@@ -16,9 +17,29 @@ type Props = {
 };
 
 export default function Home({ units, buildings, gallery }: Props) {
+  const router = useRouter();
   const [filters, setFilters] = useState<Filters>({ status: "", building: "", areaMin: null, areaMax: null, sort: "" });
   const [view, setView] = useState<"table"|"cards">("table");
   const filtered = useMemo(() => applyFilters(units, filters), [units, filters]);
+
+  async function handleContactSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    // dopilnuj form-name:
+    if (!fd.get("form-name")) fd.set("form-name", "contact");
+
+    const params = new URLSearchParams();
+    fd.forEach((value, key) => params.append(key, String(value)));
+
+    await fetch("/__forms.html", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: params.toString(),
+    });
+
+    router.push("/success");
+  }
 
   useEffect(() => {
     if (process.env.NODE_ENV !== "development") return;
@@ -117,9 +138,7 @@ export default function Home({ units, buildings, gallery }: Props) {
               id="contactForm"
               name="contact"
               method="POST"
-              data-netlify="true"
-              netlify-honeypot="bot-field"
-              action="/success"
+              onSubmit={handleContactSubmit}
               className="contact-form"
             >
               <input type="hidden" name="form-name" value="contact" />
