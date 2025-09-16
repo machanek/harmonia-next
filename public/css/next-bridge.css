@@ -62,21 +62,14 @@
 }
 
 /* Desktop nav */
-.main-nav{ 
+.nav{ 
   display: flex; 
   align-items: center; 
   gap: 2rem; 
   height: 100%; 
 }
-.main-nav ul{
-  list-style: none;
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  margin: 0;
-  padding: 0;
-}
-.main-nav a{
+
+.nav a{
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -87,10 +80,12 @@
   transition: var(--transition);
   position: relative;
 }
-.main-nav a:hover{ 
+
+.nav a:hover{ 
   color: var(--primary-green); 
 }
-.main-nav a:hover::after{
+
+.nav a:hover::after{
   content: '';
   position: absolute;
   bottom: 0;
@@ -137,7 +132,7 @@
   height: 16px;
 }
 
-.btn-phone{
+.nav-phone{
   color: var(--primary-green) !important;
   font-weight: 600;
   text-decoration: none;
@@ -146,72 +141,70 @@
   gap: 0.5rem;
   transition: var(--transition);
 }
-.btn-phone:hover{
+.nav-phone:hover{
   transform: scale(1.05);
 }
-.btn-phone:hover::after{
+.nav-phone:hover::after{
   display: none;
 }
-.btn-phone svg {
+.nav-phone svg {
   width: 16px;
   height: 16px;
 }
 
-/* Mobile toggle */
-.nav-toggle{ 
-  display: none; 
-  background: none;
-  border: none;
-  cursor: pointer;
+/* Menu toggle button */
+.menu-toggle{ 
   padding: 8px;
-  border-radius: 6px;
+  border: 1px solid #1F3D32;
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
   transition: var(--transition);
 }
-.nav-toggle:hover{
-  background: rgba(0, 0, 0, 0.05);
+.menu-toggle:hover{
+  background: rgba(31, 61, 50, 0.05);
 }
 
+/* Mobile menu dropdown */
+.mobile-menu{
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: var(--white);
+  border-top: 1px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.mobile-menu nav{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mobile-menu a{
+  padding: 12px 0;
+  color: var(--text-dark);
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.mobile-menu a:hover{
+  color: var(--primary-green);
+}
+
+/* Mobile responsive styles */
 @media (max-width: 768px){
-  .nav-toggle{
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: auto;
+  .btn-prospekt {
+    padding: 8px 16px !important;
+    font-size: 12px;
   }
-  .main-nav{ 
-    display: none; 
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background: var(--white);
-    border-bottom: 1px solid var(--border-light);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-10px);
-    opacity: 0;
-    transition: var(--transition);
-  }
-  .main-nav.is-open{ 
-    display: block; 
-    transform: translateY(0);
-    opacity: 1;
-  }
-  .main-nav ul{ 
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    padding: 16px 0;
-  }
-  .main-nav li{
-    width: 100%;
-  }
-  .main-nav a{
-    padding: 12px 24px;
-    width: 100%;
-    justify-content: flex-start;
-  }
-  .main-nav a:hover::after{
-    display: none;
+  
+  .nav-phone {
+    padding: 8px 12px !important;
+    font-size: 14px;
   }
 }
 
