@@ -1,0 +1,12 @@
+{
+  "id": "4-b-1",
+  "nr_budynku": "B",
+  "nr_lokalu": "1",
+  "pietro": 0,
+  "powierzchnia": 75.3,
+  "dodatki": "Ogródek, komórka lokatorska",
+  "cena": 720000,
+  "cena_m2": 9562,
+  "status": "SPRZEDANE",
+  "plan_url": "/assets/plans/4-b-1.pdf"
+}

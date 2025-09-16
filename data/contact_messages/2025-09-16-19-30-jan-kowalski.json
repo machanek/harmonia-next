@@ -1,0 +1,13 @@
+{
+  "id": 1,
+  "name": "Jan Kowalski",
+  "email": "jan.kowalski@example.com",
+  "phone": "+48 600 000 000",
+  "subject": "Pytanie o mieszkanie",
+  "message": "Dzień dobry, chciałbym uzyskać więcej informacji o dostępnych mieszkaniach w budynku A. Czy mogliby Państwo przesłać mi szczegółowe informacje o metrażach i cenach?",
+  "consent": true,
+  "marketing": false,
+  "timestamp": "2025-09-16T19:30:00.000Z",
+  "status": "new",
+  "notes": "Klient zainteresowany budynkiem A, odpowiedzieć w ciągu 24h"
+}

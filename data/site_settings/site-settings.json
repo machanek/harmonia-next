@@ -1,0 +1,15 @@
+{
+  "title": "Harmonia Rząska - Nowoczesne mieszkania pod Krakowem",
+  "description": "Odkryj przestrzeń stworzoną dla Ciebie – nowoczesne domy w harmonii z otoczeniem. Osiedle Harmonia Rząska oferuje różnorodne metraże w spokojnej okolicy z doskonałą komunikacją do Krakowa.",
+  "logo": "/assets/logo-harmonia-rzaska.svg",
+  "favicon_svg": "/assets/logo-harmonia-rzaska.svg",
+  "favicon_16": "/assets/favicon-16x16.svg",
+  "favicon_32": "/assets/favicon-32x32.svg",
+  "favicon_180": "/assets/apple-touch-icon.svg",
+  "favicon_192": "/assets/android-chrome-192x192.svg",
+  "favicon_512": "/assets/android-chrome-512x512.svg",
+  "phone": "730 090 030",
+  "email": "biuro@harmoniarzaska.pl",
+  "address": "Rząska k. Krakowa, gm. Zabierzów",
+  "prospekt_file": "/assets/prospekt-harmonia-rzaska.pdf"
+}

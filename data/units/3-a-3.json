@@ -1,0 +1,12 @@
+{
+  "id": "3-a-3",
+  "nr_budynku": "A",
+  "nr_lokalu": "3",
+  "pietro": 3,
+  "powierzchnia": 110.8,
+  "dodatki": "Taras, komórka lokatorska, garaż",
+  "cena": 1050000,
+  "cena_m2": 9477,
+  "status": "WOLNE",
+  "plan_url": "/assets/plans/3-a-3.pdf"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "5-b-2",
+  "nr_budynku": "B",
+  "nr_lokalu": "2",
+  "pietro": 1,
+  "powierzchnia": 88.7,
+  "dodatki": "Balkon, komórka lokatorska",
+  "cena": 850000,
+  "cena_m2": 9583,
+  "status": "WOLNE",
+  "plan_url": "/assets/plans/5-b-2.pdf"
+}
