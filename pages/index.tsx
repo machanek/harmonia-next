@@ -88,37 +88,10 @@ export default function Home({ units, buildings, gallery }: Props) {
             <h2>Plan osiedla</h2>
             <div className="plan-image">
               <img src="/images/uploads/plan-osiedla.jpg" alt="Plan zagospodarowania osiedla Harmonia Rząska" />
-                </div>
-                </div>
-        </section>
-
-        <section className="section-metrics" id="metraze">
-          <div className="container">
-            <h2>Dostępne metraże</h2>
-            <div className="metrics-grid">
-              <div className="metric">
-                <div className="metric-code">M 80</div>
-                <div className="metric-value">80 m²</div>
-                </div>
-              <div className="metric">
-                <div className="metric-code">M 107</div>
-                <div className="metric-value">107 m²</div>
-                </div>
-              <div className="metric">
-                <div className="metric-code">M 122</div>
-                <div className="metric-value">122 m²</div>
-                </div>
-              <div className="metric">
-                <div className="metric-code">M 95</div>
-                <div className="metric-value">95 m²</div>
-                </div>
-              <div className="metric">
-                <div className="metric-code">M 110</div>
-                <div className="metric-value">110 m²</div>
-              </div>
             </div>
           </div>
         </section>
+
 
         <UnitsSectionComponent
           filters={filters}
