@@ -61,36 +61,6 @@ export default function Home({ units, buildings, gallery }: Props) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <header className="header">
-        <div className="container">
-          <a href="#top" className="logo" aria-label="Harmonia Rząska — strona główna">
-            <img src="/images/logo.svg" alt="Harmonia Rząska" width={180} height={48} />
-          </a>
-
-          {/* NOWE: renderowany na serwerze przycisk hamburgera */}
-          <button
-            type="button"
-            className="nav-toggle"
-            aria-label="Menu"
-            aria-controls="main-nav"
-            aria-expanded="false"
-          >
-            ☰
-          </button>
-
-          <nav id="main-nav" className="nav" aria-label="Główna nawigacja">
-            <ul>
-              <li><a href="#o-nas">O nas</a></li>
-              <li><a href="#lokale">Lokale</a></li>
-              <li><a href="#galeria">Galeria</a></li>
-              <li><a href="#kontakt">Kontakt</a></li>
-              <li><a href="/assets/prospekt-harmonia-rzaska.pdf" target="_blank" rel="noopener" className="btn-prospect">Prospekt</a></li>
-              <li><a href="tel:730090030" className="nav-phone">730 090 030</a></li>
-            </ul>
-          </nav>
-        </div>
-      </header>
-
       <main id="top">
         <section className="hero" id="hero">
           <div className="hero-inner">
