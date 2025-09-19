@@ -21,7 +21,7 @@ async function getPayloadClient() {
       
       console.log('Payload module loaded:', !!payloadModule.getPayload)
       
-      // Uproszczona konfiguracja Payload CMS
+      // Konfiguracja Payload CMS z wymaganymi polami
       const config = {
         secret: process.env.PAYLOAD_SECRET || 'your-secret-here',
         admin: {
@@ -43,10 +43,23 @@ async function getPayloadClient() {
                 required: true,
               },
             ],
+            timestamps: true,
+            admin: {
+              useAsTitle: 'email',
+            },
           },
         ],
         globals: [],
         endpoints: [],
+        i18n: {
+          supportedLanguages: ['en'],
+          defaultLanguage: 'en',
+        },
+        upload: {
+          limits: {
+            fileSize: 5000000,
+          },
+        },
         db: {
           adapter: 'postgres',
           pool: {
