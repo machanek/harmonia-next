@@ -14,8 +14,9 @@ async function getPayloadClient() {
   if (!cached.promise) {
     // Dynamic import dla ES Module
     const { getPayload } = await import('payload')
-    const config = await import('../../payload.config')
-    cached.promise = getPayload({ config: config.default })
+    const configModule = await import('../../payload.config')
+    const config = configModule.default
+    cached.promise = getPayload({ config })
   }
 
   try {
