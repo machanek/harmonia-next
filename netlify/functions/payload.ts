@@ -45,6 +45,17 @@ async function getPayloadClient() {
             ],
           },
         ],
+        globals: [],
+        endpoints: [],
+        i18n: {
+          supportedLanguages: ['en'],
+          defaultLanguage: 'en',
+        },
+        upload: {
+          limits: {
+            fileSize: 5000000,
+          },
+        },
         db: {
           adapter: 'postgres',
           pool: {
