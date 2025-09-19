@@ -24,7 +24,7 @@ async function getPayloadClient() {
       console.log('Config module loaded:', !!configModule.default)
       
       // Użyj oryginalnej konfiguracji z payload.config.ts
-      const config = configModule.default
+      const config = await configModule.default
       
       console.log('Config created:', !!config)
       console.log('Config secret exists:', !!config.secret)
