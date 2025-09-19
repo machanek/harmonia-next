@@ -43,6 +43,20 @@ async function getPayloadClient() {
                   },
                 },
               ],
+              loginWithUsername: false,
+              depth: 0,
+              cookies: {
+                secure: false,
+                sameSite: 'lax',
+              },
+              disableLocalStrategy: false,
+              forgotPassword: {
+                generatePasswordResetToken: async () => 'token',
+                sendPasswordResetEmail: async () => {},
+              },
+              maxLoginAttempts: 5,
+              lockTime: 600000,
+              useAPIKey: false,
             },
             fields: [
               {
