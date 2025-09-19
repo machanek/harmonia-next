@@ -14,6 +14,10 @@ if (!cached) {
 }
 
 async function getPayloadClient() {
+  if (!cached) {
+    cached = (global as typeof globalThis & { payload: PayloadCache }).payload = { client: null, promise: null }
+  }
+
   if (cached.client) {
     return cached.client
   }
