@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
     // Try a simple query
     console.log('Testing database query...')
-    const result = await db.find({
+    const result = await (db as { find?: (args: { collection: string; limit: number }) => Promise<unknown> }).find?.({
       collection: 'users',
       limit: 1,
     })
