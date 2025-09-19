@@ -57,7 +57,7 @@ async function getPayloadClient() {
       console.log('Config secret exists:', !!config.secret)
       console.log('Config db exists:', !!config.db)
       
-      cached.promise = payloadModule.getPayload({ config })
+      cached.promise = payloadModule.getPayload({ config: config as any })
     } catch (importError) {
       console.error('Import error:', importError)
       throw new Error(`Failed to import Payload modules: ${importError instanceof Error ? importError.message : 'Unknown import error'}`)
