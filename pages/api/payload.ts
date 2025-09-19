@@ -85,7 +85,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Test database connection
     try {
       console.log('Testing database connection...')
-      const db = payload.db
+      const db = (payload as any).db
       console.log('Database object exists:', !!db)
       
       // Try to get database info
