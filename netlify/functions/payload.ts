@@ -1,6 +1,4 @@
 import { NextRequest } from 'next/server'
-import { getPayload } from 'payload'
-import config from '../../payload.config'
 
 let cached = (global as any).payload
 
@@ -14,7 +12,10 @@ async function getPayloadClient() {
   }
 
   if (!cached.promise) {
-    cached.promise = getPayload({ config })
+    // Dynamic import dla ES Module
+    const { getPayload } = await import('payload')
+    const config = await import('../../payload.config')
+    cached.promise = getPayload({ config: config.default })
   }
 
   try {
