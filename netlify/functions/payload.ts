@@ -83,6 +83,11 @@ async function getPayloadClient() {
             disableRestore: false,
             disablePagination: false,
             disableSort: false,
+            typescript: {
+              interface: 'User',
+            },
+            defaultPopulate: [],
+            lockDocuments: false,
           },
         ],
         globals: [],
