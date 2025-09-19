@@ -6,17 +6,17 @@
   NODE_VERSION = "20.18.0"
   NEXT_TELEMETRY_DISABLED = "1"
 
-# Netlify CMS Headers
+# Payload CMS Headers
 [[headers]]
-  for = "/admin/*"
+  for = "/api/payload/*"
   [headers.values]
-    X-Frame-Options = "DENY"
+    X-Frame-Options = "SAMEORIGIN"
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
-# Identity redirects
+# Admin redirects
 [[redirects]]
   from = "/admin"
-  to = "/admin/"
+  to = "/api/payload"
   status = 301
