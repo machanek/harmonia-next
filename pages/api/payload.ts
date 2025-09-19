@@ -37,7 +37,7 @@ async function getPayloadClient() {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const payload = await getPayloadClient() as any
+  const payload = await getPayloadClient() as { requestHandler: (args: { req: NextApiRequest; res: NextApiResponse }) => unknown }
   
   return payload.requestHandler({
     req,
