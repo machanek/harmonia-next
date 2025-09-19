@@ -24,7 +24,7 @@ async function getPayloadClient() {
       cached.promise = payloadModule.getPayload({ config })
     } catch (importError) {
       console.error('Import error:', importError)
-      throw new Error(`Failed to import Payload modules: ${importError.message}`)
+      throw new Error(`Failed to import Payload modules: ${importError instanceof Error ? importError.message : 'Unknown import error'}`)
     }
   }
 
