@@ -21,7 +21,7 @@ async function getPayloadClient() {
       
       console.log('Payload module loaded:', !!payloadModule.getPayload)
       
-      // Prosta konfiguracja Payload CMS bez buildConfig
+      // Konfiguracja Payload CMS z wymaganymi polami
       const config = {
         secret: process.env.PAYLOAD_SECRET || 'your-secret-here',
         admin: {
@@ -43,8 +43,43 @@ async function getPayloadClient() {
                 required: true,
               },
             ],
+            timestamps: true,
+            admin: {
+              useAsTitle: 'email',
+            },
           },
         ],
+        globals: [],
+        endpoints: [],
+        i18n: {
+          supportedLanguages: ['en'],
+          defaultLanguage: 'en',
+        },
+        upload: {
+          limits: {
+            fileSize: 5000000,
+          },
+        },
+        jobs: {
+          collections: {
+            users: {
+              sync: [],
+            },
+          },
+        },
+        localization: {
+          locales: [
+            {
+              code: 'en',
+              label: 'English',
+            },
+          ],
+          defaultLocale: 'en',
+        },
+        paths: {
+          config: '/var/task/payload.config.ts',
+          configDir: '/var/task',
+        },
         db: {
           adapter: 'postgres',
           pool: {
