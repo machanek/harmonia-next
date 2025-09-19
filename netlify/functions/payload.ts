@@ -19,8 +19,17 @@ async function getPayloadClient() {
       
       console.log('Payload module loaded:', !!payloadModule.getPayload)
       console.log('Config module loaded:', !!configModule.default)
+      console.log('Config module keys:', Object.keys(configModule))
+      console.log('Config default type:', typeof configModule.default)
       
       const config = configModule.default
+      console.log('Config object:', config)
+      console.log('Config is valid:', !!config && typeof config === 'object')
+      
+      if (!config) {
+        throw new Error('Payload config is undefined or null')
+      }
+      
       cached.promise = payloadModule.getPayload({ config })
     } catch (importError) {
       console.error('Import error:', importError)
