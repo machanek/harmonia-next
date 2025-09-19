@@ -18,13 +18,40 @@ async function getPayloadClient() {
     try {
       // Dynamic import dla ES Module
       const payloadModule = await import('payload')
-      const configModule = await import('../../payload.config')
       
       console.log('Payload module loaded:', !!payloadModule.getPayload)
-      console.log('Config module loaded:', !!configModule.default)
       
-      // Użyj oryginalnej konfiguracji z payload.config.ts
-      const config = await configModule.default
+      // Prosta konfiguracja Payload CMS bez buildConfig
+      const config = {
+        secret: process.env.PAYLOAD_SECRET || 'your-secret-here',
+        admin: {
+          user: 'users',
+        },
+        collections: [
+          {
+            slug: 'users',
+            auth: true,
+            fields: [
+              {
+                name: 'email',
+                type: 'email',
+                required: true,
+              },
+              {
+                name: 'password',
+                type: 'text',
+                required: true,
+              },
+            ],
+          },
+        ],
+        db: {
+          adapter: 'postgres',
+          pool: {
+            connectionString: process.env.DATABASE_URI,
+          },
+        },
+      }
       
       console.log('Config created:', !!config)
       console.log('Config secret exists:', !!config.secret)
