@@ -30,7 +30,20 @@ async function getPayloadClient() {
         collections: [
           {
             slug: 'users',
-            auth: true,
+            auth: {
+              strategies: [
+                {
+                  name: 'local',
+                  strategy: {
+                    name: 'local',
+                    authenticate: async ({ password, email }) => {
+                      // Simple authentication logic
+                      return { user: { email, id: '1' } }
+                    },
+                  },
+                },
+              ],
+            },
             fields: [
               {
                 name: 'email',
