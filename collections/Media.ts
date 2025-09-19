@@ -6,7 +6,6 @@ export const Media: CollectionConfig = {
     useAsTitle: 'filename',
   },
   upload: {
-    staticURL: '/media',
     staticDir: 'media',
     imageSizes: [
       {
