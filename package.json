@@ -16,7 +16,6 @@
     "@stitches/react": "^1.2.8",
     "payload": "beta",
     "@payloadcms/next": "beta",
-    "@payloadcms/bundler-webpack": "beta",
     "@payloadcms/db-postgres": "beta",
     "@payloadcms/richtext-lexical": "beta",
     "sharp": "^0.33.0",

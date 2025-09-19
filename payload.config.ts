@@ -1,5 +1,4 @@
 import { buildConfig } from 'payload'
-import { webpackBundler } from '@payloadcms/bundler-webpack'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
@@ -12,7 +11,6 @@ import { SiteSettings } from './collections/SiteSettings'
 export default buildConfig({
   admin: {
     user: Users.slug,
-    bundler: webpackBundler(),
   },
   editor: lexicalEditor({}),
   collections: [Users, Media, Units, ContactMessages, SiteSettings],
