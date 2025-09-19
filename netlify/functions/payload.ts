@@ -56,6 +56,26 @@ async function getPayloadClient() {
             fileSize: 5000000,
           },
         },
+        jobs: {
+          collections: {
+            users: {
+              sync: [],
+            },
+          },
+        },
+        localization: {
+          locales: [
+            {
+              code: 'en',
+              label: 'English',
+            },
+          ],
+          defaultLocale: 'en',
+        },
+        paths: {
+          config: '/var/task/payload.config.ts',
+          configDir: '/var/task',
+        },
         db: {
           adapter: 'postgres',
           pool: {
