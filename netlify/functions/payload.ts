@@ -28,43 +28,69 @@ async function getPayloadClient() {
 }
 
 export default async function handler(req: NextRequest) {
-  const payload = await getPayloadClient()
-  
-  return payload.requestHandler({
-    req,
-    res: {
-      status: (code: number) => ({
+  try {
+    // Sprawdź czy zmienne środowiskowe są ustawione
+    if (!process.env.DATABASE_URI) {
+      return new Response(JSON.stringify({ error: 'DATABASE_URI not configured' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      })
+    }
+    
+    if (!process.env.PAYLOAD_SECRET) {
+      return new Response(JSON.stringify({ error: 'PAYLOAD_SECRET not configured' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      })
+    }
+
+    const payload = await getPayloadClient()
+    
+    return payload.requestHandler({
+      req,
+      res: {
+        status: (code: number) => ({
+          json: (data: any) => ({
+            statusCode: code,
+            body: JSON.stringify(data),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }),
+          send: (data: any) => ({
+            statusCode: code,
+            body: data,
+          }),
+          end: () => ({
+            statusCode: code,
+            body: '',
+          }),
+        }),
         json: (data: any) => ({
-          statusCode: code,
+          statusCode: 200,
           body: JSON.stringify(data),
           headers: {
             'Content-Type': 'application/json',
           },
         }),
         send: (data: any) => ({
-          statusCode: code,
+          statusCode: 200,
           body: data,
         }),
         end: () => ({
-          statusCode: code,
+          statusCode: 200,
           body: '',
         }),
-      }),
-      json: (data: any) => ({
-        statusCode: 200,
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }),
-      send: (data: any) => ({
-        statusCode: 200,
-        body: data,
-      }),
-      end: () => ({
-        statusCode: 200,
-        body: '',
-      }),
-    },
-  })
+      },
+    })
+  } catch (error) {
+    console.error('Payload CMS Error:', error)
+    return new Response(JSON.stringify({ 
+      error: 'Payload CMS initialization failed',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    })
+  }
 }

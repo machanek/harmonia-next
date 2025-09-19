@@ -37,12 +37,29 @@ async function getPayloadClient() {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const payload = await getPayloadClient() as { requestHandler: (args: { req: NextApiRequest; res: NextApiResponse }) => unknown }
-  
-  return payload.requestHandler({
-    req,
-    res,
-  })
+  try {
+    // Sprawdź czy zmienne środowiskowe są ustawione
+    if (!process.env.DATABASE_URI) {
+      return res.status(500).json({ error: 'DATABASE_URI not configured' })
+    }
+    
+    if (!process.env.PAYLOAD_SECRET) {
+      return res.status(500).json({ error: 'PAYLOAD_SECRET not configured' })
+    }
+
+    const payload = await getPayloadClient() as { requestHandler: (args: { req: NextApiRequest; res: NextApiResponse }) => unknown }
+    
+    return payload.requestHandler({
+      req,
+      res,
+    })
+  } catch (error) {
+    console.error('Payload CMS Error:', error)
+    return res.status(500).json({ 
+      error: 'Payload CMS initialization failed',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    })
+  }
 }
 
 export const config = {

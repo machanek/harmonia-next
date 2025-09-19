@@ -18,5 +18,5 @@
 # Admin redirects
 [[redirects]]
   from = "/admin"
-  to = "/api/payload"
+  to = "/.netlify/functions/payload"
   status = 301
