@@ -2,10 +2,10 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { getPayload } from 'payload'
 import config from '../../payload.config'
 
-let cached = (global as any).payload
+let cached = (global as typeof globalThis & { payload?: { client: any; promise: any } }).payload
 
 if (!cached) {
-  cached = (global as any).payload = { client: null, promise: null }
+  cached = (global as typeof globalThis & { payload: { client: any; promise: any } }).payload = { client: null, promise: null }
 }
 
 async function getPayloadClient() {
