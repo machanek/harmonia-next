@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getPayload } from 'payload'
-import config from '../../payload.config'
+import payloadConfig from '../../payload.config'
 
 interface PayloadCache {
   client: unknown;
@@ -19,7 +19,7 @@ async function getPayloadClient() {
   }
 
   if (!cached.promise) {
-    cached.promise = getPayload({ config })
+    cached.promise = getPayload({ config: payloadConfig })
   }
 
   try {
