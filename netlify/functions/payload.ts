@@ -1,5 +1,8 @@
 import { NextRequest } from 'next/server'
 
+// Wymuś odświeżenie cache dla debugowania
+(global as any).payload = null
+
 let cached = (global as any).payload
 
 if (!cached) {
@@ -27,6 +30,7 @@ async function getPayloadClient() {
         collections: [
           {
             slug: 'users',
+            auth: true,
             fields: [
               {
                 name: 'email',
