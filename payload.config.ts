@@ -8,7 +8,7 @@ import { Units } from './collections/Units'
 import { ContactMessages } from './collections/ContactMessages'
 import { SiteSettings } from './collections/SiteSettings'
 
-export default buildConfig({
+const config = {
   secret: process.env.PAYLOAD_SECRET || 'your-secret-here',
   admin: {
     user: Users.slug,
@@ -27,4 +27,6 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URI,
     },
   }),
-})
+}
+
+export default buildConfig(config)

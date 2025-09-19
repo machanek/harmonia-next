@@ -23,15 +23,29 @@ async function getPayloadClient() {
   }
 
   if (!cached.promise) {
-    // buildConfig() zwraca Promise, więc musimy go await
-    const config = await payloadConfig
-    cached.promise = getPayload({ config })
+    try {
+      console.log('Loading Payload config...')
+      const config = await payloadConfig
+      console.log('Config loaded successfully:', !!config)
+      console.log('Config secret exists:', !!config.secret)
+      console.log('Config db exists:', !!config.db)
+      console.log('Config collections count:', config.collections?.length || 0)
+      
+      console.log('Initializing Payload client...')
+      cached.promise = getPayload({ config })
+    } catch (configError) {
+      console.error('Config loading error:', configError)
+      console.error('Config error details:', configError instanceof Error ? configError.stack : 'No stack trace')
+      throw new Error(`Failed to load Payload config: ${configError instanceof Error ? configError.message : 'Unknown config error'}`)
+    }
   }
 
   try {
     cached.client = await cached.promise
+    console.log('Payload client initialized successfully')
   } catch (e) {
     cached.promise = null
+    console.error('Payload client initialization failed:', e)
     throw e
   }
 
