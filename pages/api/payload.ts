@@ -89,7 +89,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.log('Database object exists:', !!db)
       
       // Try to get database info
-      if (db && typeof db.find === 'function') {
+      if (db && typeof (db as { find?: unknown }).find === 'function') {
         console.log('Database find method exists')
       }
     } catch (dbError) {
