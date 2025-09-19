@@ -9,6 +9,7 @@ import { ContactMessages } from './collections/ContactMessages'
 import { SiteSettings } from './collections/SiteSettings'
 
 export default buildConfig({
+  secret: process.env.PAYLOAD_SECRET || 'your-secret-here',
   admin: {
     user: Users.slug,
   },
