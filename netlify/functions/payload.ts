@@ -36,7 +36,7 @@ async function getPayloadClient() {
                   name: 'local',
                   strategy: {
                     name: 'local',
-                    authenticate: async ({ password, email }) => {
+                    authenticate: async ({ password, email }: { password: string; email: string }) => {
                       // Simple authentication logic
                       return { user: { email, id: '1' } }
                     },
