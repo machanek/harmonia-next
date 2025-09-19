@@ -40,8 +40,20 @@ async function getPayloadClient() {
 
 export default async function handler(req: NextRequest) {
   try {
-    // Sprawdź czy zmienne środowiskowe są ustawione
+    console.log('=== PAYLOAD CMS DEBUG START ===')
+    console.log('Request URL:', req.url)
+    console.log('Request method:', req.method)
+    
+    // Sprawdź zmienne środowiskowe
+    console.log('Environment variables check:')
+    console.log('- DATABASE_URI exists:', !!process.env.DATABASE_URI)
+    console.log('- PAYLOAD_SECRET exists:', !!process.env.PAYLOAD_SECRET)
+    console.log('- PAYLOAD_PUBLIC_SERVER_URL exists:', !!process.env.PAYLOAD_PUBLIC_SERVER_URL)
+    console.log('- SUPABASE_URL exists:', !!process.env.SUPABASE_URL)
+    console.log('- SUPABASE_ANON_KEY exists:', !!process.env.SUPABASE_ANON_KEY)
+    
     if (!process.env.DATABASE_URI) {
+      console.error('DATABASE_URI not configured')
       return new Response(JSON.stringify({ error: 'DATABASE_URI not configured' }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' }
@@ -49,14 +61,18 @@ export default async function handler(req: NextRequest) {
     }
     
     if (!process.env.PAYLOAD_SECRET) {
+      console.error('PAYLOAD_SECRET not configured')
       return new Response(JSON.stringify({ error: 'PAYLOAD_SECRET not configured' }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' }
       })
     }
 
+    console.log('Attempting to get Payload client...')
     const payload = await getPayloadClient()
+    console.log('Payload client obtained:', !!payload)
     
+    console.log('Attempting to call requestHandler...')
     return payload.requestHandler({
       req,
       res: {
@@ -95,10 +111,16 @@ export default async function handler(req: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('Payload CMS Error:', error)
+    console.error('=== PAYLOAD CMS ERROR ===')
+    console.error('Error type:', typeof error)
+    console.error('Error message:', error instanceof Error ? error.message : 'Unknown error')
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace')
+    console.error('Full error object:', error)
+    
     return new Response(JSON.stringify({ 
       error: 'Payload CMS initialization failed',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
