@@ -21,7 +21,7 @@ async function getPayloadClient() {
       
       console.log('Payload module loaded:', !!payloadModule.getPayload)
       
-      // Utwórz konfigurację bezpośrednio zamiast importować
+      // Uproszczona konfiguracja Payload CMS
       const config = {
         secret: process.env.PAYLOAD_SECRET || 'your-secret-here',
         admin: {
@@ -30,36 +30,7 @@ async function getPayloadClient() {
         collections: [
           {
             slug: 'users',
-            auth: {
-              strategies: [
-                {
-                  name: 'local',
-                  strategy: {
-                    name: 'local',
-                    authenticate: async ({ password, email }: { password: string; email: string }) => {
-                      // Simple authentication logic
-                      return { user: { email, id: '1' } }
-                    },
-                  },
-                },
-              ],
-              loginWithUsername: false,
-              depth: 0,
-              cookies: {
-                secure: false,
-                sameSite: 'lax',
-              },
-              disableLocalStrategy: false,
-              forgotPassword: {
-                generatePasswordResetToken: async () => 'token',
-                sendPasswordResetEmail: async () => {},
-              },
-              maxLoginAttempts: 5,
-              lockTime: 600000,
-              useAPIKey: false,
-              removeTokenFromResponses: true,
-              tokenExpiration: 7200,
-            },
+            auth: true,
             fields: [
               {
                 name: 'email',
@@ -72,91 +43,17 @@ async function getPayloadClient() {
                 required: true,
               },
             ],
-            endpoints: [],
-            joins: [],
-            upload: false,
-            versions: false,
-            timestamps: true,
-            admin: {
-              useAsTitle: 'email',
-            },
-            access: {
-              read: () => true,
-              create: () => true,
-              update: () => true,
-              delete: () => true,
-            },
-            hooks: {},
-            custom: {},
-            dbName: 'users',
-            labels: {
-              singular: 'User',
-              plural: 'Users',
-            },
-            graphQL: {
-              name: 'User',
-              pluralName: 'Users',
-            },
-            defaultSort: 'id',
-            defaultDepth: 1,
-            disableLocalStrategy: false,
-            disableDuplicate: false,
-            disableWhere: false,
-            disableCount: false,
-            disableFind: false,
-            disableFindOne: false,
-            disableCreate: false,
-            disableUpdate: false,
-            disableDelete: false,
-            disableArchive: false,
-            disableRestore: false,
-            disablePagination: false,
-            disableSort: false,
-            typescript: {
-              interface: 'User',
-            },
-            defaultPopulate: [],
-            lockDocuments: false,
           },
         ],
         globals: [],
         endpoints: [],
-        i18n: {
-          supportedLanguages: ['en'],
-          defaultLanguage: 'en',
-        },
-        upload: {
-          limits: {
-            fileSize: 5000000,
-          },
-        },
-        jobs: {
-          collections: {
-            users: {
-              sync: [],
-            },
-          },
-        },
-        localization: {
-          locales: [
-            {
-              code: 'en',
-              label: 'English',
-            },
-          ],
-          defaultLocale: 'en',
-        },
-        paths: {
-          config: '/var/task/payload.config.ts',
-          configDir: '/var/task',
-        },
         db: {
           adapter: 'postgres',
           pool: {
             connectionString: process.env.DATABASE_URI,
           },
         },
-      }
+      } as any
       
       console.log('Config created:', !!config)
       console.log('Config secret exists:', !!config.secret)
