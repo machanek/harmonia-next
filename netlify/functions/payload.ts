@@ -15,20 +15,43 @@ async function getPayloadClient() {
     try {
       // Dynamic import dla ES Module
       const payloadModule = await import('payload')
-      const configModule = await import('../../payload.config')
       
       console.log('Payload module loaded:', !!payloadModule.getPayload)
-      console.log('Config module loaded:', !!configModule.default)
-      console.log('Config module keys:', Object.keys(configModule))
-      console.log('Config default type:', typeof configModule.default)
       
-      const config = configModule.default
-      console.log('Config object:', config)
-      console.log('Config is valid:', !!config && typeof config === 'object')
-      
-      if (!config) {
-        throw new Error('Payload config is undefined or null')
+      // Utwórz konfigurację bezpośrednio zamiast importować
+      const config = {
+        secret: process.env.PAYLOAD_SECRET || 'your-secret-here',
+        admin: {
+          user: 'users',
+        },
+        collections: [
+          {
+            slug: 'users',
+            fields: [
+              {
+                name: 'email',
+                type: 'email',
+                required: true,
+              },
+              {
+                name: 'password',
+                type: 'text',
+                required: true,
+              },
+            ],
+          },
+        ],
+        db: {
+          adapter: 'postgres',
+          pool: {
+            connectionString: process.env.DATABASE_URI,
+          },
+        },
       }
+      
+      console.log('Config created:', !!config)
+      console.log('Config secret exists:', !!config.secret)
+      console.log('Config db exists:', !!config.db)
       
       cached.promise = payloadModule.getPayload({ config })
     } catch (importError) {
