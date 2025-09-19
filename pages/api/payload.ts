@@ -82,6 +82,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const payload = await getPayloadClient() as { requestHandler: (args: { req: NextApiRequest; res: NextApiResponse }) => unknown }
     console.log('Payload client obtained:', !!payload)
     
+    // Test database connection
+    try {
+      console.log('Testing database connection...')
+      const db = payload.db
+      console.log('Database object exists:', !!db)
+      
+      // Try to get database info
+      if (db && typeof db.find === 'function') {
+        console.log('Database find method exists')
+      }
+    } catch (dbError) {
+      console.error('Database connection test failed:', dbError)
+    }
+    
     console.log('Attempting to call requestHandler...')
     return payload.requestHandler({
       req,
