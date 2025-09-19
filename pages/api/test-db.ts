@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
     // Try to connect
     console.log('Attempting to connect to database...')
-    const db = await adapter.connect()
+    const db = await (adapter as { connect?: () => Promise<unknown> }).connect?.()
     console.log('Database connected:', !!db)
     
     // Try a simple query
