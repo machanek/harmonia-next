@@ -30,6 +30,8 @@ async function getPayloadClient() {
       console.log('Config secret exists:', !!config.secret)
       console.log('Config db exists:', !!config.db)
       console.log('Config collections count:', config.collections?.length || 0)
+      console.log('Config admin exists:', !!config.admin)
+      console.log('Config editor exists:', !!config.editor)
       
       console.log('Initializing Payload client...')
       cached.promise = getPayload({ config })
