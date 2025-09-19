@@ -12,11 +12,20 @@ async function getPayloadClient() {
   }
 
   if (!cached.promise) {
-    // Dynamic import dla ES Module
-    const { getPayload } = await import('payload')
-    const configModule = await import('../../payload.config')
-    const config = configModule.default
-    cached.promise = getPayload({ config })
+    try {
+      // Dynamic import dla ES Module
+      const payloadModule = await import('payload')
+      const configModule = await import('../../payload.config')
+      
+      console.log('Payload module loaded:', !!payloadModule.getPayload)
+      console.log('Config module loaded:', !!configModule.default)
+      
+      const config = configModule.default
+      cached.promise = payloadModule.getPayload({ config })
+    } catch (importError) {
+      console.error('Import error:', importError)
+      throw new Error(`Failed to import Payload modules: ${importError.message}`)
+    }
   }
 
   try {
