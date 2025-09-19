@@ -13,7 +13,14 @@
     "react-dom": "19.1.0",
     "next": "15.5.3",
     "lucide-react": "^0.468.0",
-    "@stitches/react": "^1.2.8"
+    "@stitches/react": "^1.2.8",
+    "payload": "latest",
+    "@payloadcms/next": "latest",
+    "@payloadcms/bundler-webpack": "latest",
+    "@payloadcms/db-postgres": "latest",
+    "@payloadcms/richtext-lexical": "latest",
+    "sharp": "^0.33.0",
+    "graphql": "^16.8.1"
   },
   "devDependencies": {
     "typescript": "^5",
