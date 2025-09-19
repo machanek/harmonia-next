@@ -57,6 +57,8 @@ async function getPayloadClient() {
               maxLoginAttempts: 5,
               lockTime: 600000,
               useAPIKey: false,
+              removeTokenFromResponses: true,
+              tokenExpiration: 7200,
             },
             fields: [
               {
