@@ -25,6 +25,35 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Sprawdź format DATABASE_URI
     let databaseUri = process.env.DATABASE_URI
     
+    // Jeśli DATABASE_URI istnieje, sprawdź czy ma znaki specjalne w haśle
+    if (databaseUri) {
+      try {
+        new URL(databaseUri)
+        console.log('DATABASE_URI format validation passed')
+      } catch (urlError) {
+        console.log('DATABASE_URI has invalid format, trying to fix...')
+        console.log('Original DATABASE_URI:', databaseUri)
+        
+        // Spróbuj naprawić przez zakodowanie hasła
+        try {
+          const match = databaseUri.match(/postgresql:\/\/postgres:([^@]+)@(.+)/)
+          if (match) {
+            const [, password, rest] = match
+            const encodedPassword = encodeURIComponent(password)
+            const fixedUri = `postgresql://postgres:${encodedPassword}@${rest}`
+            console.log('Fixed DATABASE_URI:', fixedUri.substring(0, 50) + '...')
+            
+            // Sprawdź czy naprawiony URI jest poprawny
+            new URL(fixedUri)
+            console.log('Fixed DATABASE_URI validation passed')
+            databaseUri = fixedUri
+          }
+        } catch (fixError) {
+          console.error('Failed to fix DATABASE_URI:', fixError)
+        }
+      }
+    }
+    
     if (!databaseUri && process.env.SUPABASE_URL) {
       console.log('Constructing DATABASE_URI from Supabase...')
       console.log('SUPABASE_URL:', process.env.SUPABASE_URL)
