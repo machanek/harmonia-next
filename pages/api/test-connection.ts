@@ -89,6 +89,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.log('ONLY POOLERS ALLOWED - Direct connection disabled')
         console.log('Hostname variants:', hostnameVariants)
         console.log('All variants contain pooler:', hostnameVariants.every(h => h.includes('pooler')))
+        console.log('First hostname:', hostnameVariants[0])
+        console.log('First hostname contains pooler:', hostnameVariants[0].includes('pooler'))
         
         console.log('Testing hostname variants:', hostnameVariants)
         
