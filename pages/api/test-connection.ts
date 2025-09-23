@@ -82,12 +82,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           'aws-1-eu-central-1.pooler.supabase.com', // Transaction Pooler (serverless) - WYMUSZONY
           'aws-0-eu-central-1.pooler.supabase.com', // Alternatywny pooler
           'aws-1-eu-central-1.pooler.supabase.com', // Duplikat dla pewności
-          `db.${supabaseUrl.hostname}`, // Direct connection: db.rrpzjktpdgpmmgmyxywn.supabase.co
-          supabaseUrl.hostname, // oryginalny hostname
-          `aws-0-${supabaseUrl.hostname}`, // z prefiksem aws-0-
+          // USUNIĘTO: Direct connection i inne opcje - tylko poolery!
         ]
         
         console.log('FORCING TRANSACTION POOLER USAGE - serverless optimized')
+        console.log('ONLY POOLERS ALLOWED - Direct connection disabled')
         
         console.log('Testing hostname variants:', hostnameVariants)
         
