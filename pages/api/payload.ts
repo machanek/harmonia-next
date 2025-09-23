@@ -13,7 +13,7 @@ if (!cached) {
   cached = (global as typeof globalThis & { payload: PayloadCache }).payload = { client: null, promise: null }
 }
 
-async function getPayloadClient() {
+async function getPayloadClient(databaseUri?: string) {
   if (!cached) {
     cached = (global as typeof globalThis & { payload: PayloadCache }).payload = { client: null, promise: null }
   }
@@ -28,7 +28,7 @@ async function getPayloadClient() {
       const config = await payloadConfig
       
       // Zastąp DATABASE_URI w konfiguracji jeśli został skonstruowany
-      if (databaseUri !== process.env.DATABASE_URI) {
+      if (databaseUri && databaseUri !== process.env.DATABASE_URI) {
         console.log('Using constructed DATABASE_URI instead of environment variable')
         // Musimy przekazać databaseUri do konfiguracji
         // To wymaga modyfikacji payload.config.ts
@@ -134,7 +134,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     console.log('Attempting to get Payload client...')
-    const payload = await getPayloadClient() as { requestHandler: (args: { req: NextApiRequest; res: NextApiResponse }) => unknown }
+    const payload = await getPayloadClient(databaseUri) as { requestHandler: (args: { req: NextApiRequest; res: NextApiResponse }) => unknown }
     console.log('Payload client obtained:', !!payload)
     
     // Test database connection
