@@ -25,6 +25,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log('- SUPABASE_SERVICE_ROLE_KEY length:', process.env.SUPABASE_SERVICE_ROLE_KEY?.length || 0)
     console.log('- SUPABASE_DB_PASSWORD exists:', !!process.env.SUPABASE_DB_PASSWORD)
     console.log('- SUPABASE_DB_PASSWORD length:', process.env.SUPABASE_DB_PASSWORD?.length || 0)
+    console.log('- DATABASE_PASSWORD exists:', !!process.env.DATABASE_PASSWORD)
+    console.log('- DATABASE_PASSWORD length:', process.env.DATABASE_PASSWORD?.length || 0)
+    console.log('- POSTGRES_PASSWORD exists:', !!process.env.POSTGRES_PASSWORD)
+    console.log('- POSTGRES_PASSWORD length:', process.env.POSTGRES_PASSWORD?.length || 0)
     
     // Sprawdź format DATABASE_URI
     let databaseUri = process.env.DATABASE_URI
@@ -69,12 +73,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.log('Supabase protocol:', supabaseUrl.protocol)
         console.log('Supabase port:', supabaseUrl.port)
         
-        // Supabase używa innego hostname dla PostgreSQL
-        // Spróbuj różnych formatów hostname
+        // Supabase używa specjalnego hostname dla PostgreSQL
+        // Zgodnie z dokumentacją: db.[PROJECT-REF].supabase.co
         const hostnameVariants = [
+          `db.${supabaseUrl.hostname}`, // oficjalny format: db.rrpzjktpdgpmmgmyxywn.supabase.co
           supabaseUrl.hostname, // oryginalny hostname
-          `db.${supabaseUrl.hostname}`, // z prefiksem db.
-          supabaseUrl.hostname.replace('supabase.co', 'supabase.co'), // bez zmian
           `aws-0-${supabaseUrl.hostname}`, // z prefiksem aws-0-
         ]
         
@@ -82,10 +85,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         
         // Spróbuj różnych kombinacji kluczy i haseł
         const combinations = [
+          { key: 'SUPABASE_DB_PASSWORD', password: process.env.SUPABASE_DB_PASSWORD },
+          { key: 'DATABASE_PASSWORD', password: process.env.DATABASE_PASSWORD },
+          { key: 'POSTGRES_PASSWORD', password: process.env.POSTGRES_PASSWORD },
           { key: 'SUPABASE_ANON_KEY', password: process.env.SUPABASE_ANON_KEY },
           { key: 'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY', password: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY },
           { key: 'SUPABASE_SERVICE_ROLE_KEY', password: process.env.SUPABASE_SERVICE_ROLE_KEY },
-          { key: 'SUPABASE_DB_PASSWORD', password: process.env.SUPABASE_DB_PASSWORD },
+          { key: 'SUPABASE_DB_PASSWORD (as user)', password: process.env.SUPABASE_DB_PASSWORD, user: 'postgres' },
+          { key: 'DATABASE_PASSWORD (as user)', password: process.env.DATABASE_PASSWORD, user: 'postgres' },
+          { key: 'POSTGRES_PASSWORD (as user)', password: process.env.POSTGRES_PASSWORD, user: 'postgres' },
           { key: 'SUPABASE_ANON_KEY (as user)', password: process.env.SUPABASE_ANON_KEY, user: 'postgres' },
           { key: 'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY (as user)', password: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, user: 'postgres' },
           { key: 'SUPABASE_SERVICE_ROLE_KEY (as user)', password: process.env.SUPABASE_SERVICE_ROLE_KEY, user: 'postgres' },
