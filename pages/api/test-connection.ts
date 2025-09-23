@@ -128,6 +128,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           
           console.log(`Port/User variants for ${hostname}:`, portUserVariants)
           
+          // WYMUŚ UŻYCIE TRANSACTION POOLER - pomiń inne hostname
+          if (!hostname.includes('pooler')) {
+            console.log(`SKIPPING ${hostname} - not a pooler, forcing Transaction Pooler usage`)
+            continue
+          }
+          
           for (const portUser of portUserVariants) {
             console.log(`Testing port: ${portUser.port}, user: ${portUser.user}`)
             
