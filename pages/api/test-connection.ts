@@ -113,6 +113,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Testuj różne kombinacje hostname, portów, użytkowników i kluczy
         for (const hostname of hostnameVariants) {
           console.log(`Testing hostname: ${hostname}`)
+          console.log(`Hostname contains pooler: ${hostname.includes('pooler')}`)
           
           // Różne porty i użytkownicy w zależności od hostname
           const portUserVariants = hostname.includes('pooler') 
@@ -134,6 +135,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             console.log(`SKIPPING ${hostname} - not a pooler, forcing Transaction Pooler usage`)
             continue
           }
+          
+          console.log(`PROCEEDING with ${hostname} - it's a pooler!`)
           
           for (const portUser of portUserVariants) {
             console.log(`Testing port: ${portUser.port}, user: ${portUser.user}`)
