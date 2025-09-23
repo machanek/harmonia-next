@@ -73,10 +73,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.log('Supabase protocol:', supabaseUrl.protocol)
         console.log('Supabase port:', supabaseUrl.port)
         
-        // Supabase używa specjalnego hostname dla PostgreSQL
-        // Zgodnie z dokumentacją: db.[PROJECT-REF].supabase.co
+        // Supabase używa różnych hostname dla różnych typów połączeń
+        // Transaction Pooler (dla serverless): aws-1-eu-central-1.pooler.supabase.com
+        // Direct connection: db.rrpzjktpdgpmmgmyxywn.supabase.co
         const hostnameVariants = [
-          `db.${supabaseUrl.hostname}`, // oficjalny format: db.rrpzjktpdgpmmgmyxywn.supabase.co
+          'aws-1-eu-central-1.pooler.supabase.com', // Transaction Pooler (serverless)
+          `db.${supabaseUrl.hostname}`, // Direct connection: db.rrpzjktpdgpmmgmyxywn.supabase.co
           supabaseUrl.hostname, // oryginalny hostname
           `aws-0-${supabaseUrl.hostname}`, // z prefiksem aws-0-
         ]
@@ -99,41 +101,58 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           { key: 'SUPABASE_SERVICE_ROLE_KEY (as user)', password: process.env.SUPABASE_SERVICE_ROLE_KEY, user: 'postgres' },
         ]
         
-        // Testuj różne kombinacje hostname i kluczy
+        // Testuj różne kombinacje hostname, portów, użytkowników i kluczy
         for (const hostname of hostnameVariants) {
           console.log(`Testing hostname: ${hostname}`)
           
-          for (const combo of combinations) {
-            console.log(`Testing combination: ${combo.key} with hostname: ${hostname}`)
-            console.log(`Password exists: ${!!combo.password}`)
-            console.log(`Password length: ${combo.password?.length || 0}`)
+          // Różne porty i użytkownicy w zależności od hostname
+          const portUserVariants = hostname.includes('pooler') 
+            ? [
+                { port: 6543, user: 'postgres.rrpzjktpdgpmmgmyxywn' }, // Transaction Pooler
+                { port: 6543, user: 'postgres' },
+              ]
+            : [
+                { port: 5432, user: 'postgres' }, // Direct connection
+                { port: 6543, user: 'postgres' },
+              ]
+          
+          for (const portUser of portUserVariants) {
+            console.log(`Testing port: ${portUser.port}, user: ${portUser.user}`)
             
-            if (combo.password) {
-              try {
-                const user = combo.user || 'postgres'
-                const testUri = `postgresql://${user}:${combo.password}@${hostname}:5432/postgres`
-                console.log(`Testing ${combo.key}:`, testUri.substring(0, 50) + '...')
-                console.log(`Full URI length: ${testUri.length}`)
-                
-                // Sprawdź format URL
-                const parsedUrl = new URL(testUri)
-                console.log(`Format validation passed for ${combo.key} with ${hostname}`)
-                console.log(`Parsed protocol: ${parsedUrl.protocol}`)
-                console.log(`Parsed hostname: ${parsedUrl.hostname}`)
-                console.log(`Parsed port: ${parsedUrl.port}`)
-                console.log(`Parsed pathname: ${parsedUrl.pathname}`)
-                
-                databaseUri = testUri
-                console.log('Using combination:', combo.key, 'with hostname:', hostname)
-                break
-              } catch (formatError) {
-                console.log(`Format validation failed for ${combo.key} with ${hostname}:`, formatError instanceof Error ? formatError.message : 'Unknown error')
-                console.log(`Error type: ${typeof formatError}`)
-                console.log(`Error name: ${formatError instanceof Error ? formatError.name : 'Unknown'}`)
+            for (const combo of combinations) {
+              console.log(`Testing combination: ${combo.key} with hostname: ${hostname}, port: ${portUser.port}, user: ${portUser.user}`)
+              console.log(`Password exists: ${!!combo.password}`)
+              console.log(`Password length: ${combo.password?.length || 0}`)
+              
+              if (combo.password) {
+                try {
+                  const user = combo.user || portUser.user
+                  const testUri = `postgresql://${user}:${combo.password}@${hostname}:${portUser.port}/postgres`
+                  console.log(`Testing ${combo.key}:`, testUri.substring(0, 50) + '...')
+                  console.log(`Full URI length: ${testUri.length}`)
+                  
+                  // Sprawdź format URL
+                  const parsedUrl = new URL(testUri)
+                  console.log(`Format validation passed for ${combo.key} with ${hostname}:${portUser.port}`)
+                  console.log(`Parsed protocol: ${parsedUrl.protocol}`)
+                  console.log(`Parsed hostname: ${parsedUrl.hostname}`)
+                  console.log(`Parsed port: ${parsedUrl.port}`)
+                  console.log(`Parsed pathname: ${parsedUrl.pathname}`)
+                  
+                  databaseUri = testUri
+                  console.log('Using combination:', combo.key, 'with hostname:', hostname, 'port:', portUser.port, 'user:', user)
+                  break
+                } catch (formatError) {
+                  console.log(`Format validation failed for ${combo.key} with ${hostname}:${portUser.port}:`, formatError instanceof Error ? formatError.message : 'Unknown error')
+                  console.log(`Error type: ${typeof formatError}`)
+                  console.log(`Error name: ${formatError instanceof Error ? formatError.name : 'Unknown'}`)
+                }
+              } else {
+                console.log(`Skipping ${combo.key} - no password available`)
               }
-            } else {
-              console.log(`Skipping ${combo.key} - no password available`)
             }
+            
+            if (databaseUri) break
           }
           
           if (databaseUri) break
