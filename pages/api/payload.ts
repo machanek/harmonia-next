@@ -27,17 +27,28 @@ async function getPayloadClient() {
       console.log('Loading Payload config...')
       const config = await payloadConfig
       console.log('Config loaded successfully:', !!config)
+      console.log('Config type:', typeof config)
+      console.log('Config keys:', Object.keys(config || {}))
       console.log('Config secret exists:', !!config.secret)
       console.log('Config db exists:', !!config.db)
       console.log('Config collections count:', config.collections?.length || 0)
       console.log('Config admin exists:', !!config.admin)
       console.log('Config editor exists:', !!config.editor)
       
+      // Sprawdź czy config ma wszystkie wymagane pola
+      console.log('Config structure check:')
+      console.log('- secret type:', typeof config.secret)
+      console.log('- admin type:', typeof config.admin)
+      console.log('- collections type:', typeof config.collections)
+      console.log('- db type:', typeof config.db)
+      
       console.log('Initializing Payload client...')
       cached.promise = getPayload({ config })
     } catch (configError) {
       console.error('Config loading error:', configError)
       console.error('Config error details:', configError instanceof Error ? configError.stack : 'No stack trace')
+      console.error('Config error name:', configError instanceof Error ? configError.name : 'Unknown')
+      console.error('Config error message:', configError instanceof Error ? configError.message : 'Unknown error')
       throw new Error(`Failed to load Payload config: ${configError instanceof Error ? configError.message : 'Unknown config error'}`)
     }
   }
@@ -62,8 +73,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
     // Sprawdź zmienne środowiskowe
     console.log('Environment variables check:')
+    console.log('- NODE_ENV:', process.env.NODE_ENV)
     console.log('- DATABASE_URI exists:', !!process.env.DATABASE_URI)
+    console.log('- DATABASE_URI length:', process.env.DATABASE_URI?.length || 0)
     console.log('- PAYLOAD_SECRET exists:', !!process.env.PAYLOAD_SECRET)
+    console.log('- PAYLOAD_SECRET length:', process.env.PAYLOAD_SECRET?.length || 0)
     console.log('- PAYLOAD_PUBLIC_SERVER_URL exists:', !!process.env.PAYLOAD_PUBLIC_SERVER_URL)
     console.log('- SUPABASE_URL exists:', !!process.env.SUPABASE_URL)
     console.log('- SUPABASE_ANON_KEY exists:', !!process.env.SUPABASE_ANON_KEY)
