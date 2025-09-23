@@ -100,9 +100,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.log('DATABASE_URI not found, constructing from Supabase...')
       try {
         const supabaseUrl = new URL(process.env.SUPABASE_URL)
-        // Supabase używa innego formatu - spróbujmy z SUPABASE_ANON_KEY jako hasłem
-        databaseUri = `postgresql://postgres:${process.env.SUPABASE_ANON_KEY}@${supabaseUrl.hostname}:5432/postgres`
-        console.log('Constructed DATABASE_URI from Supabase')
+        console.log('Supabase URL parsed:', supabaseUrl.hostname)
+        console.log('SUPABASE_ANON_KEY length:', process.env.SUPABASE_ANON_KEY?.length)
+        
+        // Spróbujmy różnych formatów connection string
+        const formats = [
+          `postgresql://postgres:${process.env.SUPABASE_ANON_KEY}@${supabaseUrl.hostname}:5432/postgres`,
+          `postgresql://postgres:${process.env.SUPABASE_ANON_KEY}@${supabaseUrl.hostname}:5432/postgres?sslmode=require`,
+          `postgresql://postgres:${process.env.SUPABASE_ANON_KEY}@${supabaseUrl.hostname}:5432/postgres?sslmode=require&sslcert=&sslkey=&sslrootcert=`,
+        ]
+        
+        for (let i = 0; i < formats.length; i++) {
+          try {
+            const testUrl = new URL(formats[i])
+            console.log(`Format ${i + 1} validation passed:`, formats[i].substring(0, 50) + '...')
+            databaseUri = formats[i]
+            console.log('Using format:', i + 1)
+            break
+          } catch (formatError) {
+            console.log(`Format ${i + 1} validation failed:`, formatError.message)
+          }
+        }
+        
+        if (databaseUri) {
+          console.log('Constructed DATABASE_URI from Supabase')
+        } else {
+          console.error('All formats failed validation')
+        }
       } catch (supabaseError) {
         console.error('Failed to construct DATABASE_URI from Supabase:', supabaseError)
       }
