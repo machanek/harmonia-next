@@ -112,13 +112,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         
         for (let i = 0; i < formats.length; i++) {
           try {
-            const testUrl = new URL(formats[i])
+            new URL(formats[i])
             console.log(`Format ${i + 1} validation passed:`, formats[i].substring(0, 50) + '...')
             databaseUri = formats[i]
             console.log('Using format:', i + 1)
             break
           } catch (formatError) {
-            console.log(`Format ${i + 1} validation failed:`, formatError.message)
+            console.log(`Format ${i + 1} validation failed:`, formatError instanceof Error ? formatError.message : 'Unknown error')
           }
         }
         
