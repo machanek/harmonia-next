@@ -87,6 +87,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         
         console.log('FORCING TRANSACTION POOLER USAGE - serverless optimized')
         console.log('ONLY POOLERS ALLOWED - Direct connection disabled')
+        console.log('Hostname variants:', hostnameVariants)
+        console.log('All variants contain pooler:', hostnameVariants.every(h => h.includes('pooler')))
         
         console.log('Testing hostname variants:', hostnameVariants)
         
