@@ -76,13 +76,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Supabase używa różnych hostname dla różnych typów połączeń
         // Transaction Pooler (dla serverless): aws-1-eu-central-1.pooler.supabase.com
         // Direct connection: db.rrpzjktpdgpmmgmyxywn.supabase.co
+        
+        // WYMUŚ UŻYCIE TRANSACTION POOLER - idealny dla serverless functions
         const hostnameVariants = [
-          'aws-1-eu-central-1.pooler.supabase.com', // Transaction Pooler (serverless) - PRIORYTET
+          'aws-1-eu-central-1.pooler.supabase.com', // Transaction Pooler (serverless) - WYMUSZONY
           'aws-0-eu-central-1.pooler.supabase.com', // Alternatywny pooler
+          'aws-1-eu-central-1.pooler.supabase.com', // Duplikat dla pewności
           `db.${supabaseUrl.hostname}`, // Direct connection: db.rrpzjktpdgpmmgmyxywn.supabase.co
           supabaseUrl.hostname, // oryginalny hostname
           `aws-0-${supabaseUrl.hostname}`, // z prefiksem aws-0-
         ]
+        
+        console.log('FORCING TRANSACTION POOLER USAGE - serverless optimized')
         
         console.log('Testing hostname variants:', hostnameVariants)
         
@@ -111,7 +116,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           // Różne porty i użytkownicy w zależności od hostname
           const portUserVariants = hostname.includes('pooler') 
             ? [
-                { port: 6543, user: 'postgres.rrpzjktpdgpmmgmyxywn' }, // Transaction Pooler (serverless)
+                { port: 6543, user: 'postgres.rrpzjktpdgpmmgmyxywn' }, // Transaction Pooler (serverless) - PRIORYTET
                 { port: 5432, user: 'postgres.rrpzjktpdgpmmgmyxywn' }, // Session Pooler (IPv4)
                 { port: 6543, user: 'postgres' },
                 { port: 5432, user: 'postgres' },
@@ -120,6 +125,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 { port: 5432, user: 'postgres' }, // Direct connection
                 { port: 6543, user: 'postgres' },
               ]
+          
+          console.log(`Port/User variants for ${hostname}:`, portUserVariants)
           
           for (const portUser of portUserVariants) {
             console.log(`Testing port: ${portUser.port}, user: ${portUser.user}`)
