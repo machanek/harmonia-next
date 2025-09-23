@@ -77,7 +77,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Transaction Pooler (dla serverless): aws-1-eu-central-1.pooler.supabase.com
         // Direct connection: db.rrpzjktpdgpmmgmyxywn.supabase.co
         const hostnameVariants = [
-          'aws-1-eu-central-1.pooler.supabase.com', // Transaction Pooler (serverless)
+          'aws-1-eu-central-1.pooler.supabase.com', // Transaction Pooler (serverless) - PRIORYTET
+          'aws-0-eu-central-1.pooler.supabase.com', // Alternatywny pooler
           `db.${supabaseUrl.hostname}`, // Direct connection: db.rrpzjktpdgpmmgmyxywn.supabase.co
           supabaseUrl.hostname, // oryginalny hostname
           `aws-0-${supabaseUrl.hostname}`, // z prefiksem aws-0-
