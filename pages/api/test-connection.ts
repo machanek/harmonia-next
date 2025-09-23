@@ -11,16 +11,52 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log('- DATABASE_URI length:', process.env.DATABASE_URI?.length || 0)
     console.log('- SUPABASE_URL exists:', !!process.env.SUPABASE_URL)
     console.log('- SUPABASE_ANON_KEY exists:', !!process.env.SUPABASE_ANON_KEY)
+    console.log('- SUPABASE_SERVICE_ROLE_KEY exists:', !!process.env.SUPABASE_SERVICE_ROLE_KEY)
+    console.log('- SUPABASE_DB_PASSWORD exists:', !!process.env.SUPABASE_DB_PASSWORD)
     
     // Sprawdź format DATABASE_URI
     let databaseUri = process.env.DATABASE_URI
     
-    if (!databaseUri && process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {
+    if (!databaseUri && process.env.SUPABASE_URL) {
       console.log('Constructing DATABASE_URI from Supabase...')
       try {
         const supabaseUrl = new URL(process.env.SUPABASE_URL)
-        databaseUri = `postgresql://postgres:${process.env.SUPABASE_ANON_KEY}@${supabaseUrl.hostname}:5432/postgres`
-        console.log('Constructed DATABASE_URI')
+        console.log('Supabase hostname:', supabaseUrl.hostname)
+        
+        // Spróbuj różnych kombinacji kluczy i haseł
+        const combinations = [
+          { key: 'SUPABASE_ANON_KEY', password: process.env.SUPABASE_ANON_KEY },
+          { key: 'SUPABASE_SERVICE_ROLE_KEY', password: process.env.SUPABASE_SERVICE_ROLE_KEY },
+          { key: 'SUPABASE_DB_PASSWORD', password: process.env.SUPABASE_DB_PASSWORD },
+          { key: 'SUPABASE_ANON_KEY (as user)', password: process.env.SUPABASE_ANON_KEY, user: 'postgres' },
+          { key: 'SUPABASE_SERVICE_ROLE_KEY (as user)', password: process.env.SUPABASE_SERVICE_ROLE_KEY, user: 'postgres' },
+        ]
+        
+        for (const combo of combinations) {
+          if (combo.password) {
+            try {
+              const user = combo.user || 'postgres'
+              const testUri = `postgresql://${user}:${combo.password}@${supabaseUrl.hostname}:5432/postgres`
+              console.log(`Testing ${combo.key}:`, testUri.substring(0, 50) + '...')
+              
+              // Sprawdź format URL
+              new URL(testUri)
+              console.log(`Format validation passed for ${combo.key}`)
+              databaseUri = testUri
+              console.log('Using combination:', combo.key)
+              break
+            } catch (formatError) {
+              console.log(`Format validation failed for ${combo.key}:`, formatError instanceof Error ? formatError.message : 'Unknown error')
+            }
+          }
+        }
+        
+        if (!databaseUri) {
+          console.error('All combinations failed')
+          return res.status(500).json({ error: 'Failed to construct valid DATABASE_URI from Supabase' })
+        }
+        
+        console.log('Constructed DATABASE_URI successfully')
       } catch (error) {
         console.error('Failed to construct DATABASE_URI:', error)
         return res.status(500).json({ error: 'Failed to construct DATABASE_URI' })
