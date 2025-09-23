@@ -17,6 +17,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log('- SUPABASE_URL value:', process.env.SUPABASE_URL)
     console.log('- SUPABASE_ANON_KEY exists:', !!process.env.SUPABASE_ANON_KEY)
     console.log('- SUPABASE_ANON_KEY length:', process.env.SUPABASE_ANON_KEY?.length || 0)
+    console.log('- NEXT_PUBLIC_SUPABASE_URL exists:', !!process.env.NEXT_PUBLIC_SUPABASE_URL)
+    console.log('- NEXT_PUBLIC_SUPABASE_URL value:', process.env.NEXT_PUBLIC_SUPABASE_URL)
+    console.log('- NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY exists:', !!process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY)
+    console.log('- NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY length:', process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY?.length || 0)
     console.log('- SUPABASE_SERVICE_ROLE_KEY exists:', !!process.env.SUPABASE_SERVICE_ROLE_KEY)
     console.log('- SUPABASE_SERVICE_ROLE_KEY length:', process.env.SUPABASE_SERVICE_ROLE_KEY?.length || 0)
     console.log('- SUPABASE_DB_PASSWORD exists:', !!process.env.SUPABASE_DB_PASSWORD)
@@ -54,11 +58,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
     
-    if (!databaseUri && process.env.SUPABASE_URL) {
+    if (!databaseUri && (process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL)) {
       console.log('Constructing DATABASE_URI from Supabase...')
-      console.log('SUPABASE_URL:', process.env.SUPABASE_URL)
+      const supabaseUrlString = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
+      console.log('Using Supabase URL:', supabaseUrlString)
       try {
-        const supabaseUrl = new URL(process.env.SUPABASE_URL)
+        const supabaseUrl = new URL(supabaseUrlString!)
         console.log('Supabase URL parsed successfully')
         console.log('Supabase hostname:', supabaseUrl.hostname)
         console.log('Supabase protocol:', supabaseUrl.protocol)
@@ -78,9 +83,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Spróbuj różnych kombinacji kluczy i haseł
         const combinations = [
           { key: 'SUPABASE_ANON_KEY', password: process.env.SUPABASE_ANON_KEY },
+          { key: 'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY', password: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY },
           { key: 'SUPABASE_SERVICE_ROLE_KEY', password: process.env.SUPABASE_SERVICE_ROLE_KEY },
           { key: 'SUPABASE_DB_PASSWORD', password: process.env.SUPABASE_DB_PASSWORD },
           { key: 'SUPABASE_ANON_KEY (as user)', password: process.env.SUPABASE_ANON_KEY, user: 'postgres' },
+          { key: 'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY (as user)', password: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, user: 'postgres' },
           { key: 'SUPABASE_SERVICE_ROLE_KEY (as user)', password: process.env.SUPABASE_SERVICE_ROLE_KEY, user: 'postgres' },
         ]
         
