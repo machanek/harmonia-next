@@ -108,8 +108,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           // Różne porty i użytkownicy w zależności od hostname
           const portUserVariants = hostname.includes('pooler') 
             ? [
-                { port: 6543, user: 'postgres.rrpzjktpdgpmmgmyxywn' }, // Transaction Pooler
+                { port: 6543, user: 'postgres.rrpzjktpdgpmmgmyxywn' }, // Transaction Pooler (serverless)
+                { port: 5432, user: 'postgres.rrpzjktpdgpmmgmyxywn' }, // Session Pooler (IPv4)
                 { port: 6543, user: 'postgres' },
+                { port: 5432, user: 'postgres' },
               ]
             : [
                 { port: 5432, user: 'postgres' }, // Direct connection
