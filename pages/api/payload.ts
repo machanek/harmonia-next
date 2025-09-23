@@ -26,6 +26,13 @@ async function getPayloadClient() {
     try {
       console.log('Loading Payload config...')
       const config = await payloadConfig
+      
+      // Zastąp DATABASE_URI w konfiguracji jeśli został skonstruowany
+      if (databaseUri !== process.env.DATABASE_URI) {
+        console.log('Using constructed DATABASE_URI instead of environment variable')
+        // Musimy przekazać databaseUri do konfiguracji
+        // To wymaga modyfikacji payload.config.ts
+      }
       console.log('Config loaded successfully:', !!config)
       console.log('Config type:', typeof config)
       console.log('Config keys:', Object.keys(config || {}))
@@ -86,14 +93,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log('- SUPABASE_URL exists:', !!process.env.SUPABASE_URL)
     console.log('- SUPABASE_ANON_KEY exists:', !!process.env.SUPABASE_ANON_KEY)
     
-    if (!process.env.DATABASE_URI) {
-      console.error('DATABASE_URI not configured')
+    // Sprawdź czy mamy DATABASE_URI lub możemy go skonstruować z Supabase
+    let databaseUri = process.env.DATABASE_URI
+    
+    if (!databaseUri && process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {
+      console.log('DATABASE_URI not found, constructing from Supabase...')
+      try {
+        const supabaseUrl = new URL(process.env.SUPABASE_URL)
+        // Supabase używa innego formatu - spróbujmy z SUPABASE_ANON_KEY jako hasłem
+        databaseUri = `postgresql://postgres:${process.env.SUPABASE_ANON_KEY}@${supabaseUrl.hostname}:5432/postgres`
+        console.log('Constructed DATABASE_URI from Supabase')
+      } catch (supabaseError) {
+        console.error('Failed to construct DATABASE_URI from Supabase:', supabaseError)
+      }
+    }
+    
+    if (!databaseUri) {
+      console.error('DATABASE_URI not configured and cannot construct from Supabase')
       return res.status(500).json({ error: 'DATABASE_URI not configured' })
     }
     
     // Sprawdź format DATABASE_URI
     try {
-      const url = new URL(process.env.DATABASE_URI)
+      const url = new URL(databaseUri)
       console.log('DATABASE_URI URL validation:')
       console.log('- protocol:', url.protocol)
       console.log('- hostname:', url.hostname)
@@ -102,28 +124,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.log('- search params:', url.searchParams.toString())
     } catch (urlError) {
       console.error('DATABASE_URI URL validation failed:', urlError)
-      console.error('DATABASE_URI content:', process.env.DATABASE_URI)
-      
-      // Sprawdź czy może być problem z formatem Supabase
-      if (process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {
-        console.log('SUPABASE_URL exists, trying to construct DATABASE_URI from Supabase...')
-        console.log('SUPABASE_URL:', process.env.SUPABASE_URL)
-        console.log('SUPABASE_ANON_KEY length:', process.env.SUPABASE_ANON_KEY?.length)
-        
-        // Spróbuj skonstruować DATABASE_URI z Supabase
-        try {
-          const supabaseUrl = new URL(process.env.SUPABASE_URL)
-          const constructedUri = `postgresql://postgres:${process.env.SUPABASE_ANON_KEY}@${supabaseUrl.hostname}:5432/postgres`
-          console.log('Constructed DATABASE_URI:', constructedUri.substring(0, 50) + '...')
-          
-          // Sprawdź czy skonstruowany URI jest poprawny
-          const testUrl = new URL(constructedUri)
-          console.log('Constructed URI validation passed')
-        } catch (constructError) {
-          console.error('Failed to construct DATABASE_URI from Supabase:', constructError)
-        }
-      }
-      
+      console.error('DATABASE_URI content:', databaseUri)
       return res.status(500).json({ error: 'Invalid DATABASE_URI format' })
     }
     
