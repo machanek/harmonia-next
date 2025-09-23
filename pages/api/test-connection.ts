@@ -3,25 +3,36 @@ import { NextApiRequest, NextApiResponse } from 'next'
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     console.log('=== DATABASE CONNECTION TEST ===')
+    console.log('Request method:', req.method)
+    console.log('Request URL:', req.url)
     
     // Sprawdź zmienne środowiskowe
     console.log('Environment variables:')
     console.log('- NODE_ENV:', process.env.NODE_ENV)
     console.log('- DATABASE_URI exists:', !!process.env.DATABASE_URI)
     console.log('- DATABASE_URI length:', process.env.DATABASE_URI?.length || 0)
+    console.log('- DATABASE_URI preview:', process.env.DATABASE_URI?.substring(0, 30) + '...')
     console.log('- SUPABASE_URL exists:', !!process.env.SUPABASE_URL)
+    console.log('- SUPABASE_URL value:', process.env.SUPABASE_URL)
     console.log('- SUPABASE_ANON_KEY exists:', !!process.env.SUPABASE_ANON_KEY)
+    console.log('- SUPABASE_ANON_KEY length:', process.env.SUPABASE_ANON_KEY?.length || 0)
     console.log('- SUPABASE_SERVICE_ROLE_KEY exists:', !!process.env.SUPABASE_SERVICE_ROLE_KEY)
+    console.log('- SUPABASE_SERVICE_ROLE_KEY length:', process.env.SUPABASE_SERVICE_ROLE_KEY?.length || 0)
     console.log('- SUPABASE_DB_PASSWORD exists:', !!process.env.SUPABASE_DB_PASSWORD)
+    console.log('- SUPABASE_DB_PASSWORD length:', process.env.SUPABASE_DB_PASSWORD?.length || 0)
     
     // Sprawdź format DATABASE_URI
     let databaseUri = process.env.DATABASE_URI
     
     if (!databaseUri && process.env.SUPABASE_URL) {
       console.log('Constructing DATABASE_URI from Supabase...')
+      console.log('SUPABASE_URL:', process.env.SUPABASE_URL)
       try {
         const supabaseUrl = new URL(process.env.SUPABASE_URL)
+        console.log('Supabase URL parsed successfully')
         console.log('Supabase hostname:', supabaseUrl.hostname)
+        console.log('Supabase protocol:', supabaseUrl.protocol)
+        console.log('Supabase port:', supabaseUrl.port)
         
         // Spróbuj różnych kombinacji kluczy i haseł
         const combinations = [
@@ -33,21 +44,35 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         ]
         
         for (const combo of combinations) {
+          console.log(`Testing combination: ${combo.key}`)
+          console.log(`Password exists: ${!!combo.password}`)
+          console.log(`Password length: ${combo.password?.length || 0}`)
+          
           if (combo.password) {
             try {
               const user = combo.user || 'postgres'
               const testUri = `postgresql://${user}:${combo.password}@${supabaseUrl.hostname}:5432/postgres`
               console.log(`Testing ${combo.key}:`, testUri.substring(0, 50) + '...')
+              console.log(`Full URI length: ${testUri.length}`)
               
               // Sprawdź format URL
-              new URL(testUri)
+              const parsedUrl = new URL(testUri)
               console.log(`Format validation passed for ${combo.key}`)
+              console.log(`Parsed protocol: ${parsedUrl.protocol}`)
+              console.log(`Parsed hostname: ${parsedUrl.hostname}`)
+              console.log(`Parsed port: ${parsedUrl.port}`)
+              console.log(`Parsed pathname: ${parsedUrl.pathname}`)
+              
               databaseUri = testUri
               console.log('Using combination:', combo.key)
               break
             } catch (formatError) {
               console.log(`Format validation failed for ${combo.key}:`, formatError instanceof Error ? formatError.message : 'Unknown error')
+              console.log(`Error type: ${typeof formatError}`)
+              console.log(`Error name: ${formatError instanceof Error ? formatError.name : 'Unknown'}`)
             }
+          } else {
+            console.log(`Skipping ${combo.key} - no password available`)
           }
         }
         
