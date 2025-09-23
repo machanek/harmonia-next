@@ -64,6 +64,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.log('Supabase protocol:', supabaseUrl.protocol)
         console.log('Supabase port:', supabaseUrl.port)
         
+        // Supabase używa innego hostname dla PostgreSQL
+        // Spróbuj różnych formatów hostname
+        const hostnameVariants = [
+          supabaseUrl.hostname, // oryginalny hostname
+          `db.${supabaseUrl.hostname}`, // z prefiksem db.
+          supabaseUrl.hostname.replace('supabase.co', 'supabase.co'), // bez zmian
+          `aws-0-${supabaseUrl.hostname}`, // z prefiksem aws-0-
+        ]
+        
+        console.log('Testing hostname variants:', hostnameVariants)
+        
         // Spróbuj różnych kombinacji kluczy i haseł
         const combinations = [
           { key: 'SUPABASE_ANON_KEY', password: process.env.SUPABASE_ANON_KEY },
@@ -73,37 +84,44 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           { key: 'SUPABASE_SERVICE_ROLE_KEY (as user)', password: process.env.SUPABASE_SERVICE_ROLE_KEY, user: 'postgres' },
         ]
         
-        for (const combo of combinations) {
-          console.log(`Testing combination: ${combo.key}`)
-          console.log(`Password exists: ${!!combo.password}`)
-          console.log(`Password length: ${combo.password?.length || 0}`)
+        // Testuj różne kombinacje hostname i kluczy
+        for (const hostname of hostnameVariants) {
+          console.log(`Testing hostname: ${hostname}`)
           
-          if (combo.password) {
-            try {
-              const user = combo.user || 'postgres'
-              const testUri = `postgresql://${user}:${combo.password}@${supabaseUrl.hostname}:5432/postgres`
-              console.log(`Testing ${combo.key}:`, testUri.substring(0, 50) + '...')
-              console.log(`Full URI length: ${testUri.length}`)
-              
-              // Sprawdź format URL
-              const parsedUrl = new URL(testUri)
-              console.log(`Format validation passed for ${combo.key}`)
-              console.log(`Parsed protocol: ${parsedUrl.protocol}`)
-              console.log(`Parsed hostname: ${parsedUrl.hostname}`)
-              console.log(`Parsed port: ${parsedUrl.port}`)
-              console.log(`Parsed pathname: ${parsedUrl.pathname}`)
-              
-              databaseUri = testUri
-              console.log('Using combination:', combo.key)
-              break
-            } catch (formatError) {
-              console.log(`Format validation failed for ${combo.key}:`, formatError instanceof Error ? formatError.message : 'Unknown error')
-              console.log(`Error type: ${typeof formatError}`)
-              console.log(`Error name: ${formatError instanceof Error ? formatError.name : 'Unknown'}`)
+          for (const combo of combinations) {
+            console.log(`Testing combination: ${combo.key} with hostname: ${hostname}`)
+            console.log(`Password exists: ${!!combo.password}`)
+            console.log(`Password length: ${combo.password?.length || 0}`)
+            
+            if (combo.password) {
+              try {
+                const user = combo.user || 'postgres'
+                const testUri = `postgresql://${user}:${combo.password}@${hostname}:5432/postgres`
+                console.log(`Testing ${combo.key}:`, testUri.substring(0, 50) + '...')
+                console.log(`Full URI length: ${testUri.length}`)
+                
+                // Sprawdź format URL
+                const parsedUrl = new URL(testUri)
+                console.log(`Format validation passed for ${combo.key} with ${hostname}`)
+                console.log(`Parsed protocol: ${parsedUrl.protocol}`)
+                console.log(`Parsed hostname: ${parsedUrl.hostname}`)
+                console.log(`Parsed port: ${parsedUrl.port}`)
+                console.log(`Parsed pathname: ${parsedUrl.pathname}`)
+                
+                databaseUri = testUri
+                console.log('Using combination:', combo.key, 'with hostname:', hostname)
+                break
+              } catch (formatError) {
+                console.log(`Format validation failed for ${combo.key} with ${hostname}:`, formatError instanceof Error ? formatError.message : 'Unknown error')
+                console.log(`Error type: ${typeof formatError}`)
+                console.log(`Error name: ${formatError instanceof Error ? formatError.name : 'Unknown'}`)
+              }
+            } else {
+              console.log(`Skipping ${combo.key} - no password available`)
             }
-          } else {
-            console.log(`Skipping ${combo.key} - no password available`)
           }
+          
+          if (databaseUri) break
         }
         
         if (!databaseUri) {
