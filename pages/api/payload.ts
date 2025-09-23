@@ -76,6 +76,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log('- NODE_ENV:', process.env.NODE_ENV)
     console.log('- DATABASE_URI exists:', !!process.env.DATABASE_URI)
     console.log('- DATABASE_URI length:', process.env.DATABASE_URI?.length || 0)
+    console.log('- DATABASE_URI preview:', process.env.DATABASE_URI?.substring(0, 20) + '...')
     console.log('- PAYLOAD_SECRET exists:', !!process.env.PAYLOAD_SECRET)
     console.log('- PAYLOAD_SECRET length:', process.env.PAYLOAD_SECRET?.length || 0)
     console.log('- PAYLOAD_PUBLIC_SERVER_URL exists:', !!process.env.PAYLOAD_PUBLIC_SERVER_URL)
@@ -85,6 +86,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!process.env.DATABASE_URI) {
       console.error('DATABASE_URI not configured')
       return res.status(500).json({ error: 'DATABASE_URI not configured' })
+    }
+    
+    // Sprawdź format DATABASE_URI
+    try {
+      const url = new URL(process.env.DATABASE_URI)
+      console.log('DATABASE_URI URL validation:')
+      console.log('- protocol:', url.protocol)
+      console.log('- hostname:', url.hostname)
+      console.log('- port:', url.port)
+      console.log('- pathname:', url.pathname)
+      console.log('- search params:', url.searchParams.toString())
+    } catch (urlError) {
+      console.error('DATABASE_URI URL validation failed:', urlError)
+      return res.status(500).json({ error: 'Invalid DATABASE_URI format' })
     }
     
     if (!process.env.PAYLOAD_SECRET) {
