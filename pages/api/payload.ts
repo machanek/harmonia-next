@@ -77,6 +77,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log('- DATABASE_URI exists:', !!process.env.DATABASE_URI)
     console.log('- DATABASE_URI length:', process.env.DATABASE_URI?.length || 0)
     console.log('- DATABASE_URI preview:', process.env.DATABASE_URI?.substring(0, 20) + '...')
+    console.log('- DATABASE_URI full length:', process.env.DATABASE_URI?.length)
+    console.log('- DATABASE_URI starts with postgres:', process.env.DATABASE_URI?.startsWith('postgres'))
+    console.log('- DATABASE_URI starts with postgresql:', process.env.DATABASE_URI?.startsWith('postgresql'))
     console.log('- PAYLOAD_SECRET exists:', !!process.env.PAYLOAD_SECRET)
     console.log('- PAYLOAD_SECRET length:', process.env.PAYLOAD_SECRET?.length || 0)
     console.log('- PAYLOAD_PUBLIC_SERVER_URL exists:', !!process.env.PAYLOAD_PUBLIC_SERVER_URL)
@@ -99,6 +102,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.log('- search params:', url.searchParams.toString())
     } catch (urlError) {
       console.error('DATABASE_URI URL validation failed:', urlError)
+      console.error('DATABASE_URI content:', process.env.DATABASE_URI)
+      
+      // Sprawdź czy może być problem z formatem Supabase
+      if (process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {
+        console.log('SUPABASE_URL exists, trying to construct DATABASE_URI from Supabase...')
+        console.log('SUPABASE_URL:', process.env.SUPABASE_URL)
+        console.log('SUPABASE_ANON_KEY length:', process.env.SUPABASE_ANON_KEY?.length)
+        
+        // Spróbuj skonstruować DATABASE_URI z Supabase
+        try {
+          const supabaseUrl = new URL(process.env.SUPABASE_URL)
+          const constructedUri = `postgresql://postgres:${process.env.SUPABASE_ANON_KEY}@${supabaseUrl.hostname}:5432/postgres`
+          console.log('Constructed DATABASE_URI:', constructedUri.substring(0, 50) + '...')
+          
+          // Sprawdź czy skonstruowany URI jest poprawny
+          const testUrl = new URL(constructedUri)
+          console.log('Constructed URI validation passed')
+        } catch (constructError) {
+          console.error('Failed to construct DATABASE_URI from Supabase:', constructError)
+        }
+      }
+      
       return res.status(500).json({ error: 'Invalid DATABASE_URI format' })
     }
     
