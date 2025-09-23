@@ -1,10 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  console.log('=== DATABASE CONNECTION TEST START ===')
+  console.log('Request method:', req.method)
+  console.log('Request URL:', req.url)
+  
   try {
-    console.log('=== DATABASE CONNECTION TEST ===')
-    console.log('Request method:', req.method)
-    console.log('Request URL:', req.url)
     
     // Sprawdź zmienne środowiskowe
     console.log('Environment variables:')
@@ -153,10 +154,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     
   } catch (error) {
-    console.error('Test connection error:', error)
+    console.error('=== DATABASE CONNECTION TEST ERROR ===')
+    console.error('Error type:', typeof error)
+    console.error('Error message:', error instanceof Error ? error.message : 'Unknown error')
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace')
+    console.error('Full error object:', error)
+    
     return res.status(500).json({ 
       error: 'Test connection failed',
       details: error instanceof Error ? error.message : 'Unknown error'
     })
   }
+  
+  console.log('=== DATABASE CONNECTION TEST END ===')
 }
