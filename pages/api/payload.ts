@@ -59,7 +59,8 @@ async function getPayloadClient(databaseUri?: string) {
       console.log('Initializing Payload client...')
       
       // Dodaj timeout dla getPayload
-      const payloadPromise = getPayload({ config: config as unknown as { secret?: unknown; admin?: unknown; collections?: unknown[]; db?: unknown } })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const payloadPromise = getPayload({ config: config as any })
       const payloadTimeoutPromise = new Promise((_, reject) => 
         setTimeout(() => reject(new Error('Payload client initialization timeout after 10 seconds')), 10000)
       )
