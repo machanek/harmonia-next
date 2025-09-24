@@ -158,8 +158,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     console.log('Attempting to get Payload client...')
-    const payload = await getPayloadClient(databaseUri) as { requestHandler: (args: { req: NextApiRequest; res: NextApiResponse }) => unknown }
+    const payload = await getPayloadClient(databaseUri)
     console.log('Payload client obtained:', !!payload)
+    console.log('Payload client type:', typeof payload)
+    console.log('Payload client keys:', Object.keys(payload || {}))
     
     // Test database connection
     try {
@@ -175,11 +177,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.error('Database connection test failed:', dbError)
     }
     
-    console.log('Attempting to call requestHandler...')
-    return payload.requestHandler({
-      req,
-      res,
-    })
+    // Sprawdź czy payload ma requestHandler
+    if (payload && typeof (payload as { requestHandler?: unknown }).requestHandler === 'function') {
+      console.log('Attempting to call requestHandler...')
+      return (payload as { requestHandler: (args: { req: NextApiRequest; res: NextApiResponse }) => unknown }).requestHandler({
+        req,
+        res,
+      })
+    } else {
+      console.error('Payload client does not have requestHandler method')
+      console.error('Available methods:', Object.keys(payload || {}))
+      return res.status(500).json({ 
+        error: 'Payload CMS requestHandler not available',
+        details: 'Payload client does not have requestHandler method',
+        availableMethods: Object.keys(payload || {})
+      })
+    }
   } catch (error) {
     console.error('=== PAYLOAD CMS ERROR ===')
     console.error('Error type:', typeof error)
