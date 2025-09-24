@@ -12,7 +12,13 @@ import { SiteSettings } from './collections/SiteSettings'
 function getDatabaseUri(): string {
   let databaseUri = process.env.DATABASE_URI;
   
-  // Jeśli DATABASE_URI nie istnieje, spróbuj skonstruować z Supabase
+  // Sprawdź czy DATABASE_URI używa Direct Connection (niepożądane dla serverless)
+  if (databaseUri && databaseUri.includes('db.rrpzjktpdgpmmgmyxywn.supabase.co')) {
+    console.log('DATABASE_URI uses Direct Connection, switching to Transaction Pooler');
+    databaseUri = null; // Wymuś użycie Transaction Pooler
+  }
+  
+  // Jeśli DATABASE_URI nie istnieje lub używa Direct Connection, skonstruuj z Supabase
   if (!databaseUri && process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {
     try {
       const supabaseUrl = new URL(process.env.SUPABASE_URL);
@@ -23,7 +29,7 @@ function getDatabaseUri(): string {
       const password = process.env.SUPABASE_ANON_KEY;
       
       databaseUri = `postgresql://${user}:${encodeURIComponent(password)}@${hostname}:${port}/postgres`;
-      console.log('Constructed DATABASE_URI from Supabase');
+      console.log('Constructed DATABASE_URI from Supabase with Transaction Pooler');
     } catch (error) {
       console.error('Failed to construct DATABASE_URI from Supabase:', error);
     }
@@ -36,7 +42,7 @@ function getDatabaseUri(): string {
   // Walidacja formatu URL
   try {
     new URL(databaseUri);
-    console.log('DATABASE_URI validation passed');
+    console.log('DATABASE_URI validation passed:', databaseUri.substring(0, 50) + '...');
   } catch (error) {
     console.error('Invalid DATABASE_URI format:', error);
     throw new Error('Invalid DATABASE_URI format');
