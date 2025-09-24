@@ -215,11 +215,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                   res,
                 })
               } else {
-                return res.status(200).json({
-                  message: 'Payload CMS 3.x is working',
-                  adminURL: adminURL,
-                  note: 'Admin panel is available but redirect loop prevented'
-                })
+                // Jeśli nie ma requestHandler, spróbujmy zwrócić prawdziwy interfejs HTML
+                console.log('No requestHandler available, returning HTML interface...')
+                const html = `
+                  <!DOCTYPE html>
+                  <html>
+                    <head>
+                      <title>Payload CMS Admin</title>
+                      <meta charset="utf-8">
+                      <meta name="viewport" content="width=device-width, initial-scale=1">
+                    </head>
+                    <body>
+                      <div id="payload-admin">
+                        <h1>Payload CMS 3.x Admin Panel</h1>
+                        <p>Admin URL: ${adminURL}</p>
+                        <p>Note: This is a fallback interface. The full admin panel should be available at the admin URL.</p>
+                        <script>
+                          // Przekieruj do prawdziwego interfejsu
+                          window.location.href = '${adminURL}';
+                        </script>
+                      </div>
+                    </body>
+                  </html>
+                `
+                res.setHeader('Content-Type', 'text/html')
+                return res.status(200).send(html)
               }
             }
             
