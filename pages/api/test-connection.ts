@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       try {
         new URL(databaseUri)
         console.log('DATABASE_URI format validation passed')
-      } catch (urlError) {
+      } catch {
         console.log('DATABASE_URI has invalid format, trying to fix...')
         console.log('Original DATABASE_URI:', databaseUri)
         

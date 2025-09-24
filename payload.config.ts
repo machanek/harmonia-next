@@ -8,6 +8,43 @@ import { Units } from './collections/Units'
 import { ContactMessages } from './collections/ContactMessages'
 import { SiteSettings } from './collections/SiteSettings'
 
+// Walidacja i konstrukcja DATABASE_URI
+function getDatabaseUri(): string {
+  let databaseUri = process.env.DATABASE_URI;
+  
+  // Jeśli DATABASE_URI nie istnieje, spróbuj skonstruować z Supabase
+  if (!databaseUri && process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {
+    try {
+      const supabaseUrl = new URL(process.env.SUPABASE_URL);
+      // Użyj Transaction Pooler dla serverless
+      const hostname = 'aws-1-eu-central-1.pooler.supabase.com';
+      const port = 6543;
+      const user = 'postgres.rrpzjktpdgpmmgmyxywn';
+      const password = process.env.SUPABASE_ANON_KEY;
+      
+      databaseUri = `postgresql://${user}:${encodeURIComponent(password)}@${hostname}:${port}/postgres`;
+      console.log('Constructed DATABASE_URI from Supabase');
+    } catch (error) {
+      console.error('Failed to construct DATABASE_URI from Supabase:', error);
+    }
+  }
+  
+  if (!databaseUri) {
+    throw new Error('DATABASE_URI not configured and cannot construct from Supabase');
+  }
+  
+  // Walidacja formatu URL
+  try {
+    new URL(databaseUri);
+    console.log('DATABASE_URI validation passed');
+  } catch (error) {
+    console.error('Invalid DATABASE_URI format:', error);
+    throw new Error('Invalid DATABASE_URI format');
+  }
+  
+  return databaseUri;
+}
+
 export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || 'your-secret-here',
   admin: {
@@ -24,7 +61,7 @@ export default buildConfig({
   plugins: [],
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URI,
+      connectionString: getDatabaseUri(),
       ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
     },
   }),
