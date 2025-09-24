@@ -25,7 +25,14 @@ async function getPayloadClient(databaseUri?: string) {
   if (!cached.promise) {
     try {
       console.log('Loading Payload config...')
-      const config = await payloadConfig
+      
+      // Dodaj timeout dla payloadConfig
+      const configPromise = payloadConfig
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Payload config loading timeout after 5 seconds')), 5000)
+      )
+      
+      const config = await Promise.race([configPromise, timeoutPromise])
       
       // Zastąp DATABASE_URI w konfiguracji jeśli został skonstruowany
       if (databaseUri && databaseUri !== process.env.DATABASE_URI) {
@@ -50,7 +57,14 @@ async function getPayloadClient(databaseUri?: string) {
       console.log('- db type:', typeof config.db)
       
       console.log('Initializing Payload client...')
-      cached.promise = getPayload({ config })
+      
+      // Dodaj timeout dla getPayload
+      const payloadPromise = getPayload({ config })
+      const payloadTimeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Payload client initialization timeout after 10 seconds')), 10000)
+      )
+      
+      cached.promise = Promise.race([payloadPromise, payloadTimeoutPromise])
     } catch (configError) {
       console.error('Config loading error:', configError)
       console.error('Config error details:', configError instanceof Error ? configError.stack : 'No stack trace')
