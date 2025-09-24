@@ -43,18 +43,18 @@ async function getPayloadClient(databaseUri?: string) {
       console.log('Config loaded successfully:', !!config)
       console.log('Config type:', typeof config)
       console.log('Config keys:', Object.keys(config || {}))
-      console.log('Config secret exists:', !!(config as any).secret)
-      console.log('Config db exists:', !!(config as any).db)
-      console.log('Config collections count:', (config as any).collections?.length || 0)
-      console.log('Config admin exists:', !!(config as any).admin)
-      console.log('Config editor exists:', !!(config as any).editor)
+      console.log('Config secret exists:', !!(config as unknown as { secret?: unknown }).secret)
+      console.log('Config db exists:', !!(config as unknown as { db?: unknown }).db)
+      console.log('Config collections count:', (config as unknown as { collections?: unknown[] }).collections?.length || 0)
+      console.log('Config admin exists:', !!(config as unknown as { admin?: unknown }).admin)
+      console.log('Config editor exists:', !!(config as unknown as { editor?: unknown }).editor)
       
       // Sprawdź czy config ma wszystkie wymagane pola
       console.log('Config structure check:')
-      console.log('- secret type:', typeof (config as any).secret)
-      console.log('- admin type:', typeof (config as any).admin)
-      console.log('- collections type:', typeof (config as any).collections)
-      console.log('- db type:', typeof (config as any).db)
+      console.log('- secret type:', typeof (config as unknown as { secret?: unknown }).secret)
+      console.log('- admin type:', typeof (config as unknown as { admin?: unknown }).admin)
+      console.log('- collections type:', typeof (config as unknown as { collections?: unknown }).collections)
+      console.log('- db type:', typeof (config as unknown as { db?: unknown }).db)
       
       console.log('Initializing Payload client...')
       
