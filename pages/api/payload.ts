@@ -300,6 +300,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               }
             }
             
+            console.log('Admin URL:', adminURL)
+            
+            // Sprawdź czy adminURL to /admin (co spowodowałoby pętlę)
+            if (adminURL === '/admin' || adminURL?.includes('/admin')) {
+              console.log('Admin URL is /admin, avoiding redirect loop - returning HTML interface')
+              // Zamiast przekierowywać, zwróć HTML interfejs
+              const html = `
+                <!DOCTYPE html>
+                <html>
+                  <head>
+                    <title>Payload CMS Admin</title>
+                    <meta charset="utf-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1">
+                  </head>
+                  <body>
+                    <div id="payload-admin">
+                      <h1>Payload CMS 3.x Admin Panel</h1>
+                      <p>Admin URL: ${adminURL}</p>
+                      <p>Note: This is a fallback interface. The full admin panel should be available at the admin URL.</p>
+                      <script>
+                        console.log('Payload CMS 3.x Admin Panel loaded');
+                      </script>
+                    </div>
+                  </body>
+                </html>
+              `
+              res.setHeader('Content-Type', 'text/html')
+              return res.status(200).send(html)
+            }
+            
             console.log('Redirecting to adminURL:', adminURL)
             return res.redirect(302, adminURL)
           } else {
