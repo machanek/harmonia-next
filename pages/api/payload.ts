@@ -352,6 +352,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     console.log('Trying to get Payload with config...')
                     
                     // Spróbujmy użyć getPayload z opcją config
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     const payloadWithConfig = await getPayload({ config: config as any })
                     console.log('Payload with config obtained:', !!payloadWithConfig)
                     console.log('Payload with config keys:', Object.keys(payloadWithConfig || {}))
