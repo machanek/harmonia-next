@@ -15,8 +15,8 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
-# Admin redirects
-[[redirects]]
-  from = "/admin"
-  to = "/api/payload"
-  status = 301
+# Admin redirects - removed, using direct Next.js integration
+# [[redirects]]
+#   from = "/admin"
+#   to = "/api/payload"
+#   status = 301
