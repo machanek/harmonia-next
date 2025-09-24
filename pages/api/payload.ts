@@ -340,7 +340,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                   res.setHeader('Content-Type', 'text/html')
                   return res.status(200).send(html)
                 } else {
-                  console.log('No admin interface methods available, returning fallback HTML...')
+                  console.log('No admin interface methods available, trying to use iframe approach...')
+                  
+                  // Spróbujmy użyć innego podejścia - może problem jest w tym, że musimy użyć innej metody
+                  console.log('Trying alternative approach - checking if we can use getPayload with different options...')
+                  
+                  // Spróbujmy użyć getPayload z opcją config
+                  try {
+                    const { getPayload } = await import('payload')
+                    const config = await payloadConfig
+                    console.log('Trying to get Payload with config...')
+                    
+                    // Spróbujmy użyć getPayload z opcją config
+                    const payloadWithConfig = await getPayload({ config: config as any })
+                    console.log('Payload with config obtained:', !!payloadWithConfig)
+                    console.log('Payload with config keys:', Object.keys(payloadWithConfig || {}))
+                    
+                    // Sprawdź czy ma requestHandler
+                    if (payloadWithConfig && typeof (payloadWithConfig as { requestHandler?: unknown }).requestHandler === 'function') {
+                      console.log('Using requestHandler from Payload with config...')
+                      return (payloadWithConfig as { requestHandler: (args: { req: NextApiRequest; res: NextApiResponse }) => unknown }).requestHandler({
+                        req,
+                        res,
+                      })
+                    }
+                  } catch (configError) {
+                    console.error('Error getting Payload with config:', configError)
+                  }
+                  
                   // Fallback HTML
                   const html = `
                     <!DOCTYPE html>
