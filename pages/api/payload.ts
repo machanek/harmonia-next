@@ -203,6 +203,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             console.log('Using Payload CMS 3.x - redirecting to admin panel...')
             const adminURL = (payload as { getAdminURL: () => string }).getAdminURL()
             console.log('Admin URL:', adminURL)
+            
+            // Sprawdź czy adminURL nie prowadzi do /admin (co spowodowałoby pętlę)
+            if (adminURL && adminURL.includes('/admin')) {
+              console.log('Admin URL contains /admin, avoiding redirect loop')
+              return res.status(200).json({
+                message: 'Payload CMS 3.x is working',
+                adminURL: adminURL,
+                note: 'Admin panel is available but redirect loop prevented'
+              })
+            }
+            
             return res.redirect(302, adminURL)
           } else {
             console.error('Payload client does not have requestHandler or getAdminURL method')
