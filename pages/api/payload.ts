@@ -32,7 +32,7 @@ async function getPayloadClient(databaseUri?: string) {
         setTimeout(() => reject(new Error('Payload config loading timeout after 5 seconds')), 5000)
       )
       
-      const config = await Promise.race([configPromise, timeoutPromise])
+      const config = await Promise.race([configPromise, timeoutPromise]) as any
       
       // Zastąp DATABASE_URI w konfiguracji jeśli został skonstruowany
       if (databaseUri && databaseUri !== process.env.DATABASE_URI) {
