@@ -15,7 +15,7 @@ function getDatabaseUri(): string {
   // Sprawdź czy DATABASE_URI używa Direct Connection (niepożądane dla serverless)
   if (databaseUri && databaseUri.includes('db.rrpzjktpdgpmmgmyxywn.supabase.co')) {
     console.log('DATABASE_URI uses Direct Connection, switching to Transaction Pooler');
-    databaseUri = null; // Wymuś użycie Transaction Pooler
+    databaseUri = undefined; // Wymuś użycie Transaction Pooler
   }
   
   // Jeśli DATABASE_URI nie istnieje lub używa Direct Connection, skonstruuj z Supabase
