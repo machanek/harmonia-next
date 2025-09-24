@@ -185,6 +185,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log('Payload client type:', typeof payload)
     console.log('Payload client keys:', Object.keys(payload || {}))
     
+    // Sprawdź dostępne metody Payload CMS
+    if (payload) {
+      console.log('Payload CMS methods:')
+      console.log('- requestHandler:', typeof (payload as { requestHandler?: unknown }).requestHandler)
+      console.log('- getAdminURL:', typeof (payload as { getAdminURL?: unknown }).getAdminURL)
+      console.log('- renderAdmin:', typeof (payload as { renderAdmin?: unknown }).renderAdmin)
+      console.log('- getAdminHTML:', typeof (payload as { getAdminHTML?: unknown }).getAdminHTML)
+      console.log('- admin:', typeof (payload as { admin?: unknown }).admin)
+      console.log('- config:', typeof (payload as { config?: unknown }).config)
+    }
+    
     // Test database connection
     try {
       console.log('Testing database connection...')
@@ -304,30 +315,57 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             
             // Sprawdź czy adminURL to /admin (co spowodowałoby pętlę)
             if (adminURL === '/admin' || adminURL?.includes('/admin')) {
-              console.log('Admin URL is /admin, avoiding redirect loop - returning HTML interface')
-              // Zamiast przekierowywać, zwróć HTML interfejs
-              const html = `
-                <!DOCTYPE html>
-                <html>
-                  <head>
-                    <title>Payload CMS Admin</title>
-                    <meta charset="utf-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1">
-                  </head>
-                  <body>
-                    <div id="payload-admin">
-                      <h1>Payload CMS 3.x Admin Panel</h1>
-                      <p>Admin URL: ${adminURL}</p>
-                      <p>Note: This is a fallback interface. The full admin panel should be available at the admin URL.</p>
-                      <script>
-                        console.log('Payload CMS 3.x Admin Panel loaded');
-                      </script>
-                    </div>
-                  </body>
-                </html>
-              `
-              res.setHeader('Content-Type', 'text/html')
-              return res.status(200).send(html)
+              console.log('Admin URL is /admin, avoiding redirect loop - trying to use requestHandler')
+              
+              // Spróbujmy użyć requestHandler z Payload CMS 3.x
+              if (payload && typeof (payload as { requestHandler?: unknown }).requestHandler === 'function') {
+                console.log('Using requestHandler from Payload CMS 3.x...')
+                return (payload as { requestHandler: (args: { req: NextApiRequest; res: NextApiResponse }) => unknown }).requestHandler({
+                  req,
+                  res,
+                })
+              } else {
+                console.log('No requestHandler available, trying other methods...')
+                
+                // Spróbujmy innych metod Payload CMS 3.x
+                if (payload && typeof (payload as { renderAdmin?: unknown }).renderAdmin === 'function') {
+                  console.log('Using renderAdmin method...')
+                  return (payload as { renderAdmin: (args: { req: NextApiRequest; res: NextApiResponse }) => unknown }).renderAdmin({
+                    req,
+                    res,
+                  })
+                } else if (payload && typeof (payload as { getAdminHTML?: unknown }).getAdminHTML === 'function') {
+                  console.log('Using getAdminHTML method...')
+                  const html = (payload as { getAdminHTML: () => string }).getAdminHTML()
+                  res.setHeader('Content-Type', 'text/html')
+                  return res.status(200).send(html)
+                } else {
+                  console.log('No admin interface methods available, returning fallback HTML...')
+                  // Fallback HTML
+                  const html = `
+                    <!DOCTYPE html>
+                    <html>
+                      <head>
+                        <title>Payload CMS Admin</title>
+                        <meta charset="utf-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1">
+                      </head>
+                      <body>
+                        <div id="payload-admin">
+                          <h1>Payload CMS 3.x Admin Panel</h1>
+                          <p>Admin URL: ${adminURL}</p>
+                          <p>Note: This is a fallback interface. The full admin panel should be available at the admin URL.</p>
+                          <script>
+                            console.log('Payload CMS 3.x Admin Panel loaded');
+                          </script>
+                        </div>
+                      </body>
+                    </html>
+                  `
+                  res.setHeader('Content-Type', 'text/html')
+                  return res.status(200).send(html)
+                }
+              }
             }
             
             console.log('Redirecting to adminURL:', adminURL)
