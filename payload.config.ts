@@ -26,7 +26,8 @@ function getDatabaseUri(): string {
       const hostname = 'aws-1-eu-central-1.pooler.supabase.com';
       const port = 6543;
       const user = 'postgres.rrpzjktpdgpmmgmyxywn';
-      const password = process.env.SUPABASE_ANON_KEY;
+      // Użyj hasła z panelu Supabase zamiast SUPABASE_ANON_KEY
+      const password = 'vp2TAY$w!EM#4E9f';
       
       databaseUri = `postgresql://${user}:${encodeURIComponent(password)}@${hostname}:${port}/postgres`;
       console.log('Constructed DATABASE_URI from Supabase with Transaction Pooler');
