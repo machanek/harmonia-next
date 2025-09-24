@@ -200,18 +200,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               res,
             })
           } else if (payload && typeof (payload as { getAdminURL?: unknown }).getAdminURL === 'function') {
-            console.log('Using Payload CMS 3.x - redirecting to admin panel...')
+            console.log('Using Payload CMS 3.x - getting admin URL...')
             const adminURL = (payload as { getAdminURL: () => string }).getAdminURL()
             console.log('Admin URL:', adminURL)
             
             // Sprawdź czy adminURL nie prowadzi do /admin (co spowodowałoby pętlę)
             if (adminURL && adminURL.includes('/admin')) {
               console.log('Admin URL contains /admin, avoiding redirect loop')
-              return res.status(200).json({
-                message: 'Payload CMS 3.x is working',
-                adminURL: adminURL,
-                note: 'Admin panel is available but redirect loop prevented'
-              })
+              // Zamiast zwracać JSON, spróbujmy użyć requestHandler z Payload CMS 3.x
+              if (payload && typeof (payload as { requestHandler?: unknown }).requestHandler === 'function') {
+                console.log('Using requestHandler from Payload CMS 3.x...')
+                return (payload as { requestHandler: (args: { req: NextApiRequest; res: NextApiResponse }) => unknown }).requestHandler({
+                  req,
+                  res,
+                })
+              } else {
+                return res.status(200).json({
+                  message: 'Payload CMS 3.x is working',
+                  adminURL: adminURL,
+                  note: 'Admin panel is available but redirect loop prevented'
+                })
+              }
             }
             
             return res.redirect(302, adminURL)
