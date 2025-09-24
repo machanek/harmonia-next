@@ -14,13 +14,15 @@ export default function AdminPage() {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async () => {
   try {
     // Initialize Payload CMS
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const payload = await getPayload({ config: payloadConfig as any })
     
     // Check if user is authenticated (you can add authentication logic here)
     // For now, we'll just return the page
+    console.log('Payload CMS initialized:', !!payload)
     
     return {
       props: {},
