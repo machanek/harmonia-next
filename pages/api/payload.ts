@@ -26,10 +26,10 @@ async function getPayloadClient(databaseUri?: string) {
     try {
       console.log('Loading Payload config...')
       
-      // Dodaj timeout dla payloadConfig
+      // Dodaj timeout dla payloadConfig - skróć do 3 sekund
       const configPromise = payloadConfig
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Payload config loading timeout after 5 seconds')), 5000)
+        setTimeout(() => reject(new Error('Payload config loading timeout after 3 seconds')), 3000)
       )
       
       const config = await Promise.race([configPromise, timeoutPromise]) as unknown
@@ -58,11 +58,11 @@ async function getPayloadClient(databaseUri?: string) {
       
       console.log('Initializing Payload client...')
       
-      // Dodaj timeout dla getPayload
+      // Dodaj timeout dla getPayload - skróć do 5 sekund
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const payloadPromise = getPayload({ config: config as any })
       const payloadTimeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Payload client initialization timeout after 10 seconds')), 10000)
+        setTimeout(() => reject(new Error('Payload client initialization timeout after 5 seconds')), 5000)
       )
       
       cached.promise = Promise.race([payloadPromise, payloadTimeoutPromise])
@@ -173,7 +173,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     console.log('Attempting to get Payload client...')
-    const payload = await getPayloadClient(databaseUri)
+    
+    // Dodaj timeout dla całego procesu inicjalizacji
+    const clientPromise = getPayloadClient(databaseUri)
+    const clientTimeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Payload client initialization timeout after 8 seconds')), 8000)
+    )
+    
+    const payload = await Promise.race([clientPromise, clientTimeoutPromise])
     console.log('Payload client obtained:', !!payload)
     console.log('Payload client type:', typeof payload)
     console.log('Payload client keys:', Object.keys(payload || {}))
@@ -262,6 +269,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.error('Error message:', error instanceof Error ? error.message : 'Unknown error')
     console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace')
     console.error('Full error object:', error)
+    
+    // Sprawdź czy to błąd timeout
+    if (error instanceof Error && error.message.includes('timeout')) {
+      console.error('Timeout error detected - Payload CMS initialization took too long')
+      return res.status(504).json({ 
+        error: 'Payload CMS initialization timeout',
+        details: error.message,
+        suggestion: 'Try accessing /admin endpoint instead'
+      })
+    }
     
     return res.status(500).json({ 
       error: 'Payload CMS initialization failed',
