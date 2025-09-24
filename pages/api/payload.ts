@@ -213,6 +213,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             
             // Sprawdź czy adminURL nie prowadzi do /admin (co spowodowałoby pętlę)
             // Tymczasowo wyłącz sprawdzanie, aby zobaczyć co zwraca Payload CMS
+            console.log('Admin URL check:', adminURL, 'contains /admin:', adminURL?.includes('/admin'))
             if (false && adminURL && adminURL.includes('/admin')) {
               console.log('Admin URL contains /admin, avoiding redirect loop')
               // Zamiast zwracać JSON, spróbujmy użyć requestHandler z Payload CMS 3.x
@@ -299,6 +300,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               }
             }
             
+            console.log('Redirecting to adminURL:', adminURL)
             return res.redirect(302, adminURL)
           } else {
             console.error('Payload client does not have requestHandler or getAdminURL method')
