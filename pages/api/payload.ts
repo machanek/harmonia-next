@@ -192,22 +192,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.error('Database connection test failed:', dbError)
     }
     
-    // Sprawdź czy payload ma requestHandler
-    if (payload && typeof (payload as { requestHandler?: unknown }).requestHandler === 'function') {
-      console.log('Attempting to call requestHandler...')
-      return (payload as { requestHandler: (args: { req: NextApiRequest; res: NextApiResponse }) => unknown }).requestHandler({
-        req,
-        res,
-      })
-    } else {
-      console.error('Payload client does not have requestHandler method')
-      console.error('Available methods:', Object.keys(payload || {}))
-      return res.status(500).json({ 
-        error: 'Payload CMS requestHandler not available',
-        details: 'Payload client does not have requestHandler method',
-        availableMethods: Object.keys(payload || {})
-      })
-    }
+          // Sprawdź czy payload ma requestHandler (Payload CMS 2.x) lub getAdminURL (Payload CMS 3.x)
+          if (payload && typeof (payload as { requestHandler?: unknown }).requestHandler === 'function') {
+            console.log('Attempting to call requestHandler (Payload CMS 2.x)...')
+            return (payload as { requestHandler: (args: { req: NextApiRequest; res: NextApiResponse }) => unknown }).requestHandler({
+              req,
+              res,
+            })
+          } else if (payload && typeof (payload as { getAdminURL?: unknown }).getAdminURL === 'function') {
+            console.log('Using Payload CMS 3.x - redirecting to admin panel...')
+            const adminURL = (payload as { getAdminURL: () => string }).getAdminURL()
+            console.log('Admin URL:', adminURL)
+            return res.redirect(302, adminURL)
+          } else {
+            console.error('Payload client does not have requestHandler or getAdminURL method')
+            console.error('Available methods:', Object.keys(payload || {}))
+            return res.status(500).json({ 
+              error: 'Payload CMS requestHandler/getAdminURL not available',
+              details: 'Payload client does not have requestHandler or getAdminURL method',
+              availableMethods: Object.keys(payload || {})
+            })
+          }
   } catch (error) {
     console.error('=== PAYLOAD CMS ERROR ===')
     console.error('Error type:', typeof error)
