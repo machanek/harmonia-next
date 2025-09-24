@@ -43,18 +43,18 @@ async function getPayloadClient(databaseUri?: string) {
       console.log('Config loaded successfully:', !!config)
       console.log('Config type:', typeof config)
       console.log('Config keys:', Object.keys(config || {}))
-      console.log('Config secret exists:', !!config.secret)
-      console.log('Config db exists:', !!config.db)
-      console.log('Config collections count:', config.collections?.length || 0)
-      console.log('Config admin exists:', !!config.admin)
-      console.log('Config editor exists:', !!config.editor)
+      console.log('Config secret exists:', !!(config as any).secret)
+      console.log('Config db exists:', !!(config as any).db)
+      console.log('Config collections count:', (config as any).collections?.length || 0)
+      console.log('Config admin exists:', !!(config as any).admin)
+      console.log('Config editor exists:', !!(config as any).editor)
       
       // Sprawdź czy config ma wszystkie wymagane pola
       console.log('Config structure check:')
-      console.log('- secret type:', typeof config.secret)
-      console.log('- admin type:', typeof config.admin)
-      console.log('- collections type:', typeof config.collections)
-      console.log('- db type:', typeof config.db)
+      console.log('- secret type:', typeof (config as any).secret)
+      console.log('- admin type:', typeof (config as any).admin)
+      console.log('- collections type:', typeof (config as any).collections)
+      console.log('- db type:', typeof (config as any).db)
       
       console.log('Initializing Payload client...')
       
