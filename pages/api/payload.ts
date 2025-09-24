@@ -217,6 +217,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               } else {
                 // Jeśli nie ma requestHandler, spróbujmy zwrócić prawdziwy interfejs HTML
                 console.log('No requestHandler available, returning HTML interface...')
+                console.log('Admin URL for HTML:', adminURL)
                 const html = `
                   <!DOCTYPE html>
                   <html>
@@ -238,7 +239,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     </body>
                   </html>
                 `
+                console.log('Setting Content-Type to text/html')
                 res.setHeader('Content-Type', 'text/html')
+                console.log('Sending HTML response')
                 return res.status(200).send(html)
               }
             }
