@@ -360,7 +360,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     // Sprawdź czy ma requestHandler
                     if (payloadWithConfig && typeof (payloadWithConfig as { requestHandler?: unknown }).requestHandler === 'function') {
                       console.log('Using requestHandler from Payload with config...')
-                      return (payloadWithConfig as { requestHandler: (args: { req: NextApiRequest; res: NextApiResponse }) => unknown }).requestHandler({
+                      return ((payloadWithConfig as unknown) as { requestHandler: (args: { req: NextApiRequest; res: NextApiResponse }) => unknown }).requestHandler({
                         req,
                         res,
                       })
