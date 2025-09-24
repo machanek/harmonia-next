@@ -1,49 +1,41 @@
-import { getPayload } from 'payload'
 import { GetServerSideProps } from 'next'
-import payloadConfig from '../payload.config'
+import { getPayload } from 'payload'
+import config from '../payload.config'
 
-// This page renders the Payload CMS admin interface
 export default function AdminPage() {
   return (
-    <div>
-      <h1>Loading Payload CMS Admin...</h1>
-      <script dangerouslySetInnerHTML={{
-        __html: `
-          // Redirect to the actual admin interface
-          window.location.href = '/api/payload-admin';
-        `
-      }} />
+    <div style={{ width: '100%', height: '100vh', margin: 0, padding: 0 }}>
+      <iframe 
+        src="/api/payload"
+        style={{ 
+          width: '100%', 
+          height: '100%', 
+          border: 'none',
+          margin: 0,
+          padding: 0
+        }}
+        title="Payload CMS Admin"
+      />
     </div>
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    // Initialize Payload CMS
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const payload = await getPayload({ config: payloadConfig as any })
+    // Inicjalizuj Payload CMS
+    const payload = await getPayload({
+      config,
+    })
     
-    // Get the admin URL
-    const adminURL = payload.getAdminURL()
-    console.log('Admin URL:', adminURL)
-    
-    // If admin URL is available, redirect to it
-    if (adminURL && adminURL !== '/admin') {
-      return {
-        redirect: {
-          destination: adminURL,
-          permanent: false,
-        },
-      }
-    }
+    console.log('Payload CMS initialized for admin page:', !!payload)
     
     return {
-      props: {},
+      props: {}
     }
   } catch (error) {
-    console.error('Error initializing Payload CMS:', error)
+    console.error('Admin page error:', error)
     return {
-      props: {},
+      props: {}
     }
   }
 }
