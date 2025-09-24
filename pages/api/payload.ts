@@ -212,7 +212,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             console.log('Admin URL:', adminURL)
             
             // Sprawdź czy adminURL nie prowadzi do /admin (co spowodowałoby pętlę)
-            if (adminURL && adminURL.includes('/admin')) {
+            // Tymczasowo wyłącz sprawdzanie, aby zobaczyć co zwraca Payload CMS
+            if (false && adminURL && adminURL.includes('/admin')) {
               console.log('Admin URL contains /admin, avoiding redirect loop')
               // Zamiast zwracać JSON, spróbujmy użyć requestHandler z Payload CMS 3.x
               if (payload && typeof (payload as { requestHandler?: unknown }).requestHandler === 'function') {
@@ -255,10 +256,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                             <h1>Payload CMS 3.x Admin Panel</h1>
                             <p>Admin URL: ${adminURL}</p>
                             <p>Note: This is a fallback interface. The full admin panel should be available at the admin URL.</p>
-                            <script>
-                              // Przekieruj do prawdziwego interfejsu
-                              window.location.href = '${adminURL}';
-                            </script>
+                        <script>
+                          // Usuń przekierowanie, aby uniknąć pętli
+                          console.log('Payload CMS 3.x Admin Panel loaded');
+                        </script>
                           </div>
                         </body>
                       </html>
@@ -284,10 +285,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                           <h1>Payload CMS 3.x Admin Panel</h1>
                           <p>Admin URL: ${adminURL}</p>
                           <p>Note: This is a fallback interface. The full admin panel should be available at the admin URL.</p>
-                          <script>
-                            // Przekieruj do prawdziwego interfejsu
-                            window.location.href = '${adminURL}';
-                          </script>
+                        <script>
+                          // Usuń przekierowanie, aby uniknąć pętli
+                          console.log('Payload CMS 3.x Admin Panel loaded');
+                        </script>
                         </div>
                       </body>
                     </html>
