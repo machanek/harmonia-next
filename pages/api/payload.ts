@@ -222,34 +222,79 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                   res,
                 })
               } else {
-                // Jeśli nie ma requestHandler, spróbujmy zwrócić prawdziwy interfejs HTML
-                console.log('No requestHandler available, returning HTML interface...')
-                console.log('Admin URL for HTML:', adminURL)
-                const html = `
-                  <!DOCTYPE html>
-                  <html>
-                    <head>
-                      <title>Payload CMS Admin</title>
-                      <meta charset="utf-8">
-                      <meta name="viewport" content="width=device-width, initial-scale=1">
-                    </head>
-                    <body>
-                      <div id="payload-admin">
-                        <h1>Payload CMS 3.x Admin Panel</h1>
-                        <p>Admin URL: ${adminURL}</p>
-                        <p>Note: This is a fallback interface. The full admin panel should be available at the admin URL.</p>
-                        <script>
-                          // Przekieruj do prawdziwego interfejsu
-                          window.location.href = '${adminURL}';
-                        </script>
-                      </div>
-                    </body>
-                  </html>
-                `
-                console.log('Setting Content-Type to text/html')
-                res.setHeader('Content-Type', 'text/html')
-                console.log('Sending HTML response')
-                return res.status(200).send(html)
+                // Jeśli nie ma requestHandler, spróbujmy zwrócić prawdziwy interfejs Payload CMS
+                console.log('No requestHandler available, trying to return Payload CMS interface...')
+                console.log('Admin URL for interface:', adminURL)
+                
+                // Spróbujmy zwrócić prawdziwy interfejs Payload CMS zamiast fallback HTML
+                try {
+                  // Sprawdź czy payload ma inne metody do renderowania interfejsu
+                  if (payload && typeof (payload as { renderAdmin?: unknown }).renderAdmin === 'function') {
+                    console.log('Using renderAdmin method...')
+                    return (payload as { renderAdmin: (args: { req: NextApiRequest; res: NextApiResponse }) => unknown }).renderAdmin({
+                      req,
+                      res,
+                    })
+                  } else if (payload && typeof (payload as { getAdminHTML?: unknown }).getAdminHTML === 'function') {
+                    console.log('Using getAdminHTML method...')
+                    const html = (payload as { getAdminHTML: () => string }).getAdminHTML()
+                    res.setHeader('Content-Type', 'text/html')
+                    return res.status(200).send(html)
+                  } else {
+                    console.log('No admin interface methods available, returning fallback HTML...')
+                    const html = `
+                      <!DOCTYPE html>
+                      <html>
+                        <head>
+                          <title>Payload CMS Admin</title>
+                          <meta charset="utf-8">
+                          <meta name="viewport" content="width=device-width, initial-scale=1">
+                        </head>
+                        <body>
+                          <div id="payload-admin">
+                            <h1>Payload CMS 3.x Admin Panel</h1>
+                            <p>Admin URL: ${adminURL}</p>
+                            <p>Note: This is a fallback interface. The full admin panel should be available at the admin URL.</p>
+                            <script>
+                              // Przekieruj do prawdziwego interfejsu
+                              window.location.href = '${adminURL}';
+                            </script>
+                          </div>
+                        </body>
+                      </html>
+                    `
+                    console.log('Setting Content-Type to text/html')
+                    res.setHeader('Content-Type', 'text/html')
+                    console.log('Sending HTML response')
+                    return res.status(200).send(html)
+                  }
+                } catch (interfaceError) {
+                  console.error('Error rendering admin interface:', interfaceError)
+                  // Fallback do HTML
+                  const html = `
+                    <!DOCTYPE html>
+                    <html>
+                      <head>
+                        <title>Payload CMS Admin</title>
+                        <meta charset="utf-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1">
+                      </head>
+                      <body>
+                        <div id="payload-admin">
+                          <h1>Payload CMS 3.x Admin Panel</h1>
+                          <p>Admin URL: ${adminURL}</p>
+                          <p>Note: This is a fallback interface. The full admin panel should be available at the admin URL.</p>
+                          <script>
+                            // Przekieruj do prawdziwego interfejsu
+                            window.location.href = '${adminURL}';
+                          </script>
+                        </div>
+                      </body>
+                    </html>
+                  `
+                  res.setHeader('Content-Type', 'text/html')
+                  return res.status(200).send(html)
+                }
               }
             }
             
