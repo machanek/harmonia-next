@@ -56,6 +56,14 @@ export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || 'your-secret-here',
   admin: {
     user: Users.slug,
+    routes: {
+      login: '/admin/login',
+      logout: '/admin/logout',
+      account: '/admin/account',
+      createFirstUser: '/admin/create-first-user',
+      forgot: '/admin/forgot',
+      reset: '/admin/reset',
+    },
   },
   editor: lexicalEditor({}),
   collections: [Users, Media, Units, ContactMessages, SiteSettings],
