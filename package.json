@@ -10,15 +10,15 @@
     "create-admin": "tsx scripts/create-admin.ts"
   },
   "dependencies": {
-    "@payloadcms/db-postgres": "beta",
-    "@payloadcms/next": "beta",
-    "@payloadcms/richtext-lexical": "beta",
+    "@payloadcms/db-postgres": "3.56.0",
+    "@payloadcms/next": "3.56.0",
+    "@payloadcms/richtext-lexical": "3.56.0",
     "@stitches/react": "^1.2.8",
     "@supabase/ssr": "^0.5.1",
     "graphql": "^16.8.1",
     "lucide-react": "^0.468.0",
     "next": "15.5.3",
-    "payload": "beta",
+    "payload": "3.56.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "sharp": "^0.33.0"
